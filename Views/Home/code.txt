@@ -1,0 +1,11 @@
+      /* for (let element of data) {
+            var tr = $('<tr></tr>');	
+            
+            console.log(element);
+            for (let key in element)
+            {
+             var td = $('<td>'+element[key]+'</td>');
+             tr.append(td);           
+            }
+            $('#1245').append(tr);
+        } */

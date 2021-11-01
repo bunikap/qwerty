@@ -1,0 +1,71 @@
+@model IEnumerable<qwerty.Models.Tasks>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Detail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DDate)
+            </th>
+            <th>
+                Owners
+            </th>
+            <th>
+                Approver
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.stat)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Detail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Owners.own)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Approve.own)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.stat.status)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

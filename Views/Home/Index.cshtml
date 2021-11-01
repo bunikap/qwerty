@@ -1,0 +1,339 @@
+@model IEnumerable<qwerty.Models.HomeModel>
+<html>
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <style>
+        /* width */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #C37B89;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        th {
+            text-transform: capitalize;
+        }
+    </style>
+</head>
+@{
+    ViewBag.Title = "Home Page";
+    var dataList = ViewBag.Data;
+}
+
+
+<script>
+
+    $(function () {
+
+        $('#btnupload').on('click', function () {
+
+            var fileExtension = ['xls', 'xlsx'];
+
+            var filename = $('#fileupload').val();
+
+            if (filename.length == 0) {
+
+                alert("Please select a file.");
+
+                return false;
+
+            }
+
+            else {
+
+                var extension = filename.replace(/^.*\./, '');
+
+                if ($.inArray(extension, fileExtension) == -1) {
+
+                    alert("Please select only excel files.");
+
+                    return false;
+                }
+            }
+
+            var fdata = new FormData();
+
+            var fileUpload = $("#fileupload").get(0);
+
+            var files = fileUpload.files;
+
+            fdata.append(files[0].name, files[0]);
+
+            $.ajax({
+
+                type: "POST",
+
+                url: "/Home/Import",
+
+                beforeSend: function (xhr) {
+
+                    xhr.setRequestHeader("XSRF-TOKEN",
+
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+
+                },
+
+                data: fdata,
+
+                contentType: false,
+
+                processData: false,
+
+                success: function (response) {
+                   
+                    if (response.length == 0)
+
+                        alert('Some error occured while uploading');
+
+                    else {
+
+                        $('#divPrint').html(response);
+
+                    }
+
+                },
+
+                error: function (e) {
+
+                    $('#divPrint').html(e.responseText);
+
+                }
+
+            });
+
+        })
+
+        $('#btnExport').on('click', function () {
+
+            var fileExtension = ['xls', 'xlsx'];
+
+            var filename = $('#fileupload').val();
+
+            if (filename.length == 0) {
+
+                alert("Please select a file then Import");
+
+                return false;
+
+            }
+
+        });
+
+    });
+</script>
+
+
+
+<form asp-controller="Home" asp-action="Export" method="post" enctype="multipart/form-data">
+
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <select name="singleChange" id="123456" class="form-control " asp-items="ViewBag.OwnerId"
+                onchange="singleSelectChangeValue();  " style="text-align: center;">
+                <option>--- select Owner Task ---</option>
+
+            </select>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+
+                <input type="file" id="fileupload" name="files" class="form-control" />
+
+            </div>
+
+
+        </div>
+        <div class="col-md-3">
+            <input type="button" name="Upload" value="Upload" id="btnupload" class="btn btn-primary" />
+
+            <a href="@Url.Action("Download", "Home")">Download</a>
+
+        </div>
+        <div class="col-md-3">
+            <input type="submit" name="Export" value="Create and Export" id="btnExport" 13 class="btn btn-primary"
+                asp-action="Export" />
+        </div>
+    </div>
+
+</form>
+
+
+
+
+<div class="row pt-5">
+    <div class="col-md-4">
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+    <div class="col-md-8" id="12345">
+        <table class="table table-responsive" id="table1">
+            <thead>
+                <th>Title</th>
+                <th>Detail</th>
+                <th>Start</th>
+                <th>Deadline</th>
+                <th>Aprrover</th>
+                <th>Status</th>
+            </thead>
+            <tbody id="1245"></tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+
+    </div>
+</div>
+</div>
+
+
+
+<script>
+
+    var myChart = new Chart();
+    //var table = new DataTable();
+
+    function sendValue(id) {
+        var data = { OwnerId: id };
+        $.ajax({
+            type: "post",
+            url: "@Url.Action("passIntoView", "Home")",
+            contentType: "application/x-www-form-urlencoded",
+            data: data,
+            dataType: "json",
+            success: function (respone) {
+                codomo(respone);
+            },
+            failure: function (response) {
+                alert(response.data);
+            }
+        });
+        $.ajax({
+            type: "post",
+            url: "@Url.Action("DataTable", "Home")",
+            contentType: "application/x-www-form-urlencoded",
+            data: data,
+            dataType: "json",
+            success: function (respone) {
+
+                //table.destroy(); 
+                $('#table1').DataTable().clear().destroy();
+                create_table(respone);
+
+                var table = $('#table1').DataTable({
+                    "scrollY": "200px",
+                    "paging": true,
+                    dom: 'B<"clear">lfrtip',
+                    buttons: true
+
+                });
+
+
+            },
+            failure: function (response) {
+                alert(response.data);
+            }
+        });
+    }
+
+
+
+    function codomo(v) {
+
+        const data = {
+            labels: v.labels,
+            datasets: [{
+                label: 'My First Dataset',
+                data: v.series,
+                backgroundColor: [
+                    'rgb(255, 205, 86)',
+                    'rgb(102, 204, 255)',
+                    'rgb(153, 255, 51)',
+                    'rgb(255, 0, 0)'
+                ],
+                hoverOffset: 4
+            }]
+        };
+
+        const config = {
+            type: 'pie',
+            data: data,
+            options: {
+
+            }
+        };
+        myChart.destroy();
+        myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    }
+
+
+    function generateTable(table, data) {
+        for (let element of data) {
+            var tr = $('<tr></tr>');
+
+            console.log(element);
+            for (let key in element) {
+                var td = $('<td>' + element[key] + '</td>');
+                tr.append(td);
+            }
+            $('#1245').append(tr);
+        }
+
+    }
+
+
+
+
+
+    function create_table(data) {
+        $("#1245").empty();
+        let dt = data;
+        let table = document.querySelector("table");
+        generateTable(table, dt.task);
+
+    }
+
+
+
+    function singleSelectChangeValue() {
+        var selectedObject = document.getElementById("123456");
+        var selValue = selectedObject.value;
+        var selectOwner = selectedObject.options[selectedObject.selectedIndex].text;
+
+        return sendValue(selValue);
+
+    }
+
+    $(document).ready(function () {
+
+        console.log("HELOO")
+        let a = new DataTable();
+        console.log('', a)
+
+
+    });
+
+</script>
+
+
+</html>

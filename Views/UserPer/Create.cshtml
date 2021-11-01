@@ -1,0 +1,105 @@
+@model qwerty.Models.UserPer
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+<style>
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #C37B89;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
+<h4>UserPer</h4>
+<hr />
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-4">
+            <label asp-for="Ownerss" class="control-label"></label>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="PermissionsId" class="control-label"></label>
+        </div>
+        <div class="col-md-2">
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <select asp-for="OwnerId" class="form-control" asp-items="ViewBag.OwnerId"></select>
+            </div>
+        </div>
+        <div class="col-md-6 ">
+            <div class="scrollbar">
+                <div class="force-overflow">
+                    @foreach (var item in Model.AvailablePermission)
+                    {
+
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="SelectedPermission" value="@item.Value"
+                                @if(Model.SelectedPermission.Contains(item.Value)) { <text> checked </text>
+                            }
+                            /> @item.Text
+                            </label>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <input type="button" class="btn btn-primary t-5" value="Add"
+                onclick="location.href='@Url.Action("Create", "Permission")'" />
+        
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+        <div class="col-md-6">
+
+        </div>
+        <div class="col-md-2"></div>
+
+    </div>
+</form>
+
+
+
+
+
+
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

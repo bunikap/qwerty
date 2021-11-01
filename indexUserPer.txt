@@ -1,0 +1,63 @@
+@model qwerty.Models.UserPer
+@* @model IEnumerable<qwerty.Models.UserPer> *@
+@* @using MultipleModelInOneView;
+    @model dynamic *@
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>User Permission</h4>
+<hr />
+
+<form asp-action="Index">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-4"><label>User</label></div>
+        <div class="col-md-6"><label asp-for="Permissions" class="control-label"></label></div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <select asp-for="OwnerId" class="form-control" asp-items="ViewBag.OwnerId"></select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group ">
+                @* @foreach (var item in @ViewBag.TypeItemList)
+                {
+                    <input type="checkbox" name="@item.permission" value="@item.Id" id="@item.permission">
+                    <label>@item.permission</label>
+                } *@
+
+
+
+            </div>
+        </div>
+        <div class="col-md-2">
+            <input type="button" class="btn btn-primary t-5" value="Add"
+                onclick="location.href='@Url.Action("Create", "Permission")'" />
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+            <div>
+                <a href=@Url.Action("Index", "User")>See All Permission info</a>
+            </div>
+        </div>
+        <div class="col-md-6"></div>
+        <div class="col-md-2"></div>
+    </div>
+</form>
+
+
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

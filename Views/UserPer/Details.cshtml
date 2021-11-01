@@ -1,0 +1,101 @@
+@model qwerty.Models.UserPer
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Detail</h1>
+<style>
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #C37B89;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
+<h4>User Permission Detail</h4>
+<hr />
+<div asp-action="Details">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-2">
+            <h6> User name :</h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">@Html.DisplayFor(model => model.Ownerss.own)</div>
+    </div>
+    <div class="row pt-3">
+        <div class="col-md-4">
+            <h6>Permission </h6>
+            <div class="scrollbar">
+                <div class="force-overflow">
+                    @foreach (var item in Model.AvailablePermission)
+                    {
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="SelectedPermission" value="@item.Value"
+                                checked="@item.Selected" disabled @if(Model.SelectedPermission.Contains(item.Value)) {
+                                <text> checked </text>
+                            }
+                            /> @item.Text
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-md-6 ">
+                @* <div class="scrollbar">
+                    <div class="force-overflow">
+                    @foreach (var item in Model.AvailablePermission)
+                    {
+
+                    <div class="checkbox">
+                    <label>
+                    <input type="checkbox" name="SelectedPermission" value="@item.Value" checked = "@item.Selected" disabled
+                    @if(Model.SelectedPermission.Contains(item.Value)) { <text> checked </text>
+                    }
+                    /> @item.Text
+                    </label>
+                    </div>
+                    }
+                    </div> *@
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row pt-5">
+        <div class="col-md-4">
+            <div>
+                <a asp-action="Index">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+@section Scripts {
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,12 @@
+                  
+            var qwertyContext = from m in _context.Owner
+                            join n in _context.Permission on m.PermissionId equals n.Id
+                            select new UserPer{
+                                OwnerId = m.Id,
+                                PermissionsId = n.Id
+                            };
+           
+            
+             await _context.SaveChangesAsync();
+            
+            return View(await qwertyContext.ToListAsync());

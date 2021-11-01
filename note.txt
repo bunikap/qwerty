@@ -1,0 +1,45 @@
+# https://docs.microsoft.com/th-th/dotnet/core/tools/dotnet-new
+# https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-new-sdk-templates
+dotnet new mvc --name ProjectName -o OutputDirectory --framework netcoreapp3.1 
+# Framework
+# net5.0
+# netcoreapp3.1
+# netcoreapp3.0
+code -r OutputDirectory
+dotnet dev-certs https --trust
+111111
+dotnet tool install --global dotnet-ef --version 3.1.9
+dotnet tool install --global dotnet-aspnet-codegenerator --version 3.1.4
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite --version 3.1.9
+dotnet add package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore --version 3.1.9
+dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Design --version 3.1.4
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 3.1.9
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 3.1.9
+dotnet add package Microsoft.Extensions.Logging.Debug --version 3.1.9
+
+# https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql
+dotnet add package Pomelo.EntityFrameworkCore.MySql --version 3.2.7   
+dotnet tool update --global dotnet-ef --version 3.1.19
+
+# https://docs.microsoft.com/th-th/aspnet/core/tutorials/first-mvc-app/adding-model?view=aspnetcore-3.1&tabs=visual-studio-code
+
+dotnet-aspnet-codegenerator controller -name MoviesController -m Movie -dc Lab01Context --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+
+
+
+
+
+
+
+dotnet-aspnet-codegenerator controller -name MoviesController -m Movie -dc Lab01Context --relativeFolderPath Controllers --useDefaultLayout --referenceScriptLibraries
+dotnet ef database update
+
+
+## Change Port 
+# https://andrewlock.net/5-ways-to-set-the-urls-for-an-aspnetcore-app/
+Properties\launchSettings.json
+Program.cs
+
+https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-3.1#set-environment-and-command-line-arguments-with-visual-studio-1

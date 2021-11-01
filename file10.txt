@@ -1,0 +1,21 @@
+ if (owner.Type == "1")
+                {
+                    _context.Add(owner);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+
+                if (owner.Type == "2")
+                {
+                    var App = new Appr
+                    {
+                        Id = owner.Id,
+                        Approve = owner.own,
+                        Department = owner.Department,
+                        Type = owner.Type
+                    };
+                    _context.Add(App);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                    

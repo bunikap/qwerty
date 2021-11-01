@@ -1,0 +1,212 @@
+// using System;
+// using System.Collections.Generic;
+// using System.Linq;
+// using System.Threading.Tasks;
+// using Microsoft.AspNetCore.Mvc;
+// using Microsoft.AspNetCore.Mvc.Rendering;
+// using Microsoft.EntityFrameworkCore;
+// using qwerty.Data;
+// using qwerty.Models;
+
+// namespace qwerty.Controllers
+// {
+//     public class TaskController : Controller
+//     {
+//         private readonly QwertyContext _context;
+
+//         public TaskController(QwertyContext context)
+//         {
+//             _context = context;
+//         }
+
+//         // GET: Task
+//         public async Task<IActionResult> Index()
+//         {
+//             var qwertyContext = _context.Tasks.Include(t => t.U).Include(t => t.stat);
+//             return View(await qwertyContext.ToListAsync());
+//         }
+
+//         // GET: Task/Details/5
+//         public async Task<IActionResult> Details(int? id)
+//         {
+//             if (id == null)
+//             {
+//                 return NotFound();
+//             }
+
+//             var tasks = await _context.Tasks
+//                 .Include(t => t.U)
+//                 .Include(t => t.stat)
+//                 .FirstOrDefaultAsync(m => m.Id == id);
+//             if (tasks == null)
+//             {
+//                 return NotFound();
+//             }
+
+//             return View(tasks);
+//         }
+
+//         // GET: Task/Create
+//         public IActionResult Create()
+//         {
+//             var Owns = from m in _context.Owner
+//                        select m;
+//             Owns = Owns.Where(s => s.TypesId == 1);
+
+//             var Appr = from m in _context.Owner
+//                        select m;
+//             Appr = Appr.Where(s => s.TypesId == 2);
+//             ViewData["OwnerId"] = new SelectList(Owns, "Id", "own");
+//             ViewData["A"] = new SelectList(Appr, "Id", "own");
+//             ViewData["StatusId"] = new SelectList(_context.Status, "Id", "status");
+//             return View();
+//         }
+
+//         // POST: Task/Create
+//         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+//         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+//         [HttpPost]
+//         [ValidateAntiForgeryToken]
+//         public async Task<IActionResult> Create([Bind("Id,Title,Detail,SDate,DDate,OwnerId,A,own,StatusId")] Tasks tasks)
+//         {
+
+//             var Owns = from m in _context.Owner
+//                        select m;
+//             Owns = Owns.Where(s => s.TypesId == 1);
+
+//             var Appr = from m in _context.Owner
+//                        select m;
+//             Appr = Appr.Where(s => s.TypesId == 2);
+//             var Ap = from m in _context.Owner
+//                                 select m;
+//                         Ap = Ap.Where(s => s.Id == tasks.A);
+//             ViewData["OwnerId"] = new SelectList(Owns, "Id", "own", tasks.OwnerId);
+//             ViewData["A"] = new SelectList(Appr, "Id", "own", tasks.A);
+//             ViewData["StatusId"] = new SelectList(_context.Status, "Id", "status", tasks.StatusId);
+//             var name = _context.Owner;
+//             foreach( Owner n in name)
+//             {
+//                    ViewData["own"]=name.Find(n.own,tasks.A);
+
+//             }
+        
+//             if (ModelState.IsValid)
+//             {
+//                 // tasks.own = _context.Where(s=>s.==tasks.A);
+//                 _context.Add(tasks);
+//                 await _context.SaveChangesAsync();
+//                 return RedirectToAction(nameof(Index));
+//             }
+//             return View(tasks);
+//         }
+
+//         // GET: Task/Edit/5
+//         public async Task<IActionResult> Edit(int? id)
+//         {
+//             if (id == null)
+//             {
+//                 return NotFound();
+//             }
+
+//             var tasks = await _context.Tasks.FindAsync(id);
+//             if (tasks == null)
+//             {
+//                 return NotFound();
+//             }
+//             var Owns = from m in _context.Owner
+//                        select m;
+//             Owns = Owns.Where(s => s.TypesId == 1);
+
+//             var Appr = from m in _context.Owner
+//                        select m;
+//             Appr = Appr.Where(s => s.TypesId == 2);
+
+//             ViewData["OwnerId"] = new SelectList(Owns, "Id", "own", tasks.OwnerId);
+//             ViewData["A"] = new SelectList(Appr, "Id", "own", tasks.A);
+//             ViewData["StatusId"] = new SelectList(_context.Status, "Id", "status", tasks.StatusId);
+//             return View(tasks);
+//         }
+
+//         // POST: Task/Edit/5
+//         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+//         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+//         [HttpPost]
+//         [ValidateAntiForgeryToken]
+//         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Detail,SDate,DDate,OwnerId,A,own,StatusId")] Tasks tasks)
+//         {
+//             if (id != tasks.Id)
+//             {
+//                 return NotFound();
+//             }
+
+//             if (ModelState.IsValid)
+//             {
+//                 try
+//                 {
+//                     _context.Update(tasks);
+//                     await _context.SaveChangesAsync();
+//                 }
+//                 catch (DbUpdateConcurrencyException)
+//                 {
+//                     if (!TasksExists(tasks.Id))
+//                     {
+//                         return NotFound();
+//                     }
+//                     else
+//                     {
+//                         throw;
+//                     }
+//                 }
+//                 return RedirectToAction(nameof(Index));
+//             }
+//             var Owns = from m in _context.Owner
+//                        select m;
+//             Owns = Owns.Where(s => s.TypesId == 1);
+
+//             var Appr = from m in _context.Owner
+//                        select m;
+//             Appr = Appr.Where(s => s.TypesId == 2);
+
+//             ViewData["OwnerId"] = new SelectList(Owns, "Id", "own", tasks.OwnerId);
+//             ViewData["A"] = new SelectList(Appr, "Id", "own", tasks.A);
+//             ViewData["StatusId"] = new SelectList(_context.Status, "Id", "status", tasks.StatusId);
+//             return View(tasks);
+//         }
+
+//         // GET: Task/Delete/5
+//         public async Task<IActionResult> Delete(int? id)
+//         {
+//             if (id == null)
+//             {
+//                 return NotFound();
+//             }
+
+//             var tasks = await _context.Tasks
+//                 .Include(t => t.U)
+//                 .Include(t => t.stat)
+//                 .FirstOrDefaultAsync(m => m.Id == id);
+//             if (tasks == null)
+//             {
+//                 return NotFound();
+//             }
+
+//             return View(tasks);
+//         }
+
+//         // POST: Task/Delete/5
+//         [HttpPost, ActionName("Delete")]
+//         [ValidateAntiForgeryToken]
+//         public async Task<IActionResult> DeleteConfirmed(int id)
+//         {
+//             var tasks = await _context.Tasks.FindAsync(id);
+//             _context.Tasks.Remove(tasks);
+//             await _context.SaveChangesAsync();
+//             return RedirectToAction(nameof(Index));
+//         }
+
+//         private bool TasksExists(int id)
+//         {
+//             return _context.Tasks.Any(e => e.Id == id);
+//         }
+//     }
+// }
