@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -54,8 +53,8 @@ namespace qwerty.Controllers
                             join n in _context.Owner on m.OwnerId equals n.Id
                             select new { Id = m.OwnerId, name = n.own, p = m.PermissionsId};
 
-            ViewData["ApproveId"] = new SelectList(name_list.Where(s => s.p == 2), "Id", "name");
-            ViewData["OwnersId"] = new SelectList(name_list.Where(s => s.p == 1), "Id", "name");
+            ViewData["ApproveId"] = new SelectList(name_list.Where(s => s.p == 1), "Id", "name");
+            ViewData["OwnersId"] = new SelectList(name_list.Where(s => s.p == 2), "Id", "name");
             ViewData["StatusId"] = new SelectList(_context.Status, "Id", "status");
             return View();
         }

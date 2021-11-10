@@ -1,12 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 
 namespace qwerty.Models
 {
-   	[DataContract]
+    [DataContract]
 	public class DataPoint
 	{
 		public DataPoint(string label, double y)

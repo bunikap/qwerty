@@ -1,5 +1,3 @@
-using System;
-
 namespace qwerty.Models
 {
     public class ErrorViewModel
