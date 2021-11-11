@@ -2,7 +2,13 @@
 <html>
 
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> *@
+    <script src="~/plugins/chart.js/Chart.bundle.js"></script>
+        <script src="~/plugins/chart.js/Chart.bundle.min.js"></script>
+        <script src="~/plugins/chart.js/Chart.js"></script>
+        <script src="~/plugins/chart.js/Chart.min.js"></script>
+        <link rel="stylesheet" href="~/plugins/chart.js/Chart.css">
+        <link rel="stylesheet" href="~/plugins/chart.js/Chart.min.css">
 
 
     <style>
@@ -34,6 +40,7 @@
 @{
     ViewBag.Title = "Home Page";
     var dataList = ViewBag.Data;
+
 }
 
 
@@ -96,7 +103,7 @@
                 processData: false,
 
                 success: function (response) {
-                   
+
                     if (response.length == 0)
 
                         alert('Some error occured while uploading');
@@ -141,10 +148,7 @@
 
 
 <form asp-controller="Home" asp-action="Export" method="post" enctype="multipart/form-data">
-
-
     <div class="row">
-
         <div class="col-md-3">
             <select name="singleChange" id="123456" class="form-control " asp-items="ViewBag.OwnerId"
                 onchange="singleSelectChangeValue();  " style="text-align: center;">
@@ -179,12 +183,12 @@
 
 
 <div class="row pt-5">
-    <div class="col-md-4">
+    <div id="divchart" class="col-md-6">
         <div>
             <canvas id="myChart"></canvas>
         </div>
     </div>
-    <div class="col-md-8" id="12345">
+    <div class="col-md-6" id="12345">
         <table class="table table-responsive" id="table1">
             <thead>
                 <th>Title</th>
@@ -204,7 +208,7 @@
 </div>
 
 <style>
-    .dt-button{
+    .dt-button {
         background: red !important;
     }
 </style>
@@ -223,6 +227,9 @@
             data: data,
             dataType: "json",
             success: function (respone) {
+                $('#divchart').empty();
+                $('#myChart').remove();
+                $('#divchart').append(' <div><canvas id = "myChart" ></canvas ></div >');
                 codomo(respone);
             },
             failure: function (response) {
@@ -261,7 +268,7 @@
 
     function codomo(v) {
 
-        const data = {
+        let data = {
             labels: v.labels,
             datasets: [{
                 label: 'My First Dataset',
@@ -283,9 +290,9 @@
 
             }
         };
-        myChart.destroy();
+
         myChart = new Chart(
-            document.getElementById('myChart'),
+            document.getElementById('myChart').getContext('2d'),
             config
         );
     }
@@ -328,14 +335,7 @@
 
     }
 
-    $(document).ready(function () {
-
-        console.log("HELOO")
-        let a = new DataTable();
-        console.log('', a)
-
-
-    });
+ 
 
 </script>
 
