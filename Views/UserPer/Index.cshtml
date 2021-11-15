@@ -7,6 +7,10 @@
 @{
     ViewData["Title"] = "Index";
 }
+
+<header>
+    <link href='@Url.Content("~/css/site2.css")' rel="stylesheet" type="text/css" />
+</header>
 <style>
     /* width */
     ::-webkit-scrollbar {
@@ -18,76 +22,126 @@
         background: #f1f1f1;
     }
 
-    /* Handle */
+  
+     /* Handle */
     ::-webkit-scrollbar-thumb {
-        background: #C37B89;
+        background: #F3B0C3;
     }
 
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
-        background: #555;
+        background: #FF968A;
     }
 </style>
-<h1>User Permission Info</h1>
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<div class="table-responsive">
-    <table class="table table-hover">
-        @{
-            var i = 0;
-            var table = ViewBag.table;
 
-        }
-        <thead>
-            <tr>
-                @for (i = 1; i < table.Columns.Count; i++)
-                {
-                    <th>
-                        @table.Columns[i]
-                    </th>
-                }
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <ol class="breadcrumb ">
+                    <li class="breadcrumb-item active">User Permission</li>
+                </ol>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+    </div>
+</section>
 
-                <th></th>
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">User Permission </h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover" id="table_userper">
+                    @{
+                        var i = 0;
+                        var table = ViewBag.table;
 
-
-
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach (DataRow n in @table.Rows)
-            {
-                <tr>
-                    <td>
-                        @n.ItemArray[1]
-                    </td>
-                    @for (int r = 2; r < n.ItemArray.Count(); r++)
-                    {
-
-                        @if (n.ItemArray[r].ToString() == "True")
-                        {
-                            <td>
-                                <input type="checkbox" name="check" id="GFG" checked disabled><br>
-                            </td>
-                        }
-                        else
-                        {
-                            <td>
-
-                                <input type="checkbox" name="check" id="GFG" disabled><br>
-
-                            </td>
-                        }
                     }
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@n.ItemArray[0]">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@n.ItemArray[0]">Detail</a> |
-                        <a asp-action="Delete" asp-route-id="@n.ItemArray[0]">Delete</a>
-                    </td>
+                    <thead>
+                        <tr>
+                            @for (i = 1; i < table.Columns.Count; i++)
+                            {
+                                <th>
+                                    @table.Columns[i]
+                                </th>
+                            }
 
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+                            <th></th>
+
+
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (DataRow n in @table.Rows)
+                        {
+                            <tr>
+                                <td>
+                                    @n.ItemArray[1]
+                                </td>
+                                @for (int r = 2; r < n.ItemArray.Count(); r++)
+                                {
+
+                                    @if (n.ItemArray[r].ToString() == "True")
+                                    {
+                                        <td>
+                                            <input type="checkbox" name="check" id="GFG" checked disabled><br>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+
+                                            <input type="checkbox" name="check" id="GFG" disabled><br>
+
+                                        </td>
+                                    }
+                                }
+                                <td>
+                                        <div class="col text-center">
+
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-edit"
+                                        onclick="location.href='@Url.Action("Edit", "UserPer", new { id = @n.ItemArray[0] })'"><i
+                                            class="fas fa-solid fa-pen"></i></button>
+                                        <button type="button" class="btn btn-detail"
+                                        onclick="location.href='@Url.Action("Details", "UserPer", new { id = @n.ItemArray[0]})'"><i
+                                            class="fas fa-regular fa-info"></i></button>
+                                        <button type="button" class="btn btn-delete"
+                                        onclick="location.href='@Url.Action("Delete", "UserPer", new { id = @n.ItemArray[0]})'"><i
+                                            class="fas fa-solid fa-trash"></i></button>
+                                    </div>
+                                        </div>
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+
+            </div>
+            <div class="card-footer">
+                <input type="button" value="Create New" id="btndownload" class="btn btn-create"
+                    onclick="location.href='@Url.Action("Create", "UserPer")'" />
+            </div>
+        </div>
+
+
+    </div>
+</section>
+<script>
+    $('#table_userper').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": false,
+        "autoWidth": false,
+        "responsive": true,
+    });</script>

@@ -4,40 +4,110 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+@* <h1>Create</h1>
 
-<h4>Permission</h4>
-<hr />
-<form asp-action="Create">
+    <h4>Permission</h4>
+    <hr />
+    <form asp-action="Create">
     <div class="row">
-        <div class="col-md-4">
+    <div class="col-md-4">
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="permission" class="control-label"></label>
-                <input asp-for="permission" class="form-control" />
-                <span asp-validation-for="permission" class="text-danger"></span>
-            </div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+    <label asp-for="permission" class="control-label"></label>
+    <input asp-for="permission" class="form-control" />
+    <span asp-validation-for="permission" class="text-danger"></span>
+    </div>
 
-        </div>
+    </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group lp-4">
-                <input type="button" class="btn btn-primary t-5" value="Back"
-                    onclick="location.href='@Url.Action("Index", "UserPer")'" />
-                <input type="submit" value="Create" class="btn btn-primary" />
-                 <input type="button" class="btn btn-primary t-5" value="Delete"
-                    onclick="location.href='@Url.Action("Index", "Permission")'" />
+    <div class="col-md-6">
+    <div class="form-group lp-4">
+    <input type="button" class="btn btn-primary t-5" value="Back"
+    onclick="location.href='@Url.Action("Create", "UserPer")'" />
+    <input type="submit" value="Create" class="btn btn-primary" />
+    <input type="button" class="btn btn-primary t-5" value="Delete"
+    onclick="location.href='@Url.Action("Index", "Permission")'" />
+    </div>
+    </div>
+    </div>
+    </form>
+    </div>
+    </div> *@
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <ol class="breadcrumb ">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Permission"
+                            asp-action="Index">Permission</a></li>
+                    <li class="breadcrumb-item active">Create</li>
+                </ol>
+            </div>
+            <div class="col-md-6">
             </div>
         </div>
     </div>
-</form>
-</div>
-</div>
+</section>
+
+
+<section class="content">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Add Permision</h3>
+                    </div>
+                    <form asp-action="Create">
+                        <div class="card-body">
+
+                            <div class="row">
+                                <div class="col-md-4">
+
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="form-group">
+                                        <label asp-for="permission" class="control-label"></label>
+                                        <input asp-for="permission" class="form-control" />
+                                        <span asp-validation-for="permission" class="text-danger"></span>
+                                    </div>
+
+                                </div>
+                            </div>
 
 
 
+                        </div>
+                        <div class="card-footer">
+
+                            <div class="form-group">
+                                <input type="button" class="btn btn-secondary" value="Back"
+                                    onclick="location.href='@Url.Action("Create", "UserPer")'" />
+                                <input type="submit" value="Create" class="btn btn-create" />
+                                <input type="button" class="btn btn-delete" value="Delete"
+                                    onclick="location.href='@Url.Action("Index", "Permission")'" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+
+
+
+</section>
 @section Scripts {
 @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

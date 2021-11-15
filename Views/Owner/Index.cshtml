@@ -4,40 +4,104 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<header>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.own)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Department)
-            </th>
-           
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.own)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Department)
-            </td>
-          
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+    <link href='@Url.Content("~/css/site2.css")' rel="stylesheet" type="text/css" />
+</header>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <ol class="breadcrumb ">
+                    <li class="breadcrumb-item active">User</li>
+                </ol>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content">
+
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+
+                <h3 class="card-title">User Table </h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped" id="table_user">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.own)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Department)
+                            </th>
+
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.own)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Department)
+                                </td>
+
+                                <td>
+                                    <div class="row">
+                                        <div class="col text-center">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-edit"
+                                                onclick="location.href='@Url.Action("Edit", "Owner", new { id = @item.Id })'"><i
+                                                    class="fas fa-solid fa-pen"></i></button>
+                                                <button type="button" class="btn btn-detail"
+                                                onclick="location.href='@Url.Action("Details", "Owner", new { id = @item.Id })'"><i
+                                                    class="fas fa-regular fa-info"></i></button>
+                                                <button type="button" class="btn btn-delete"
+                                                onclick="location.href='@Url.Action("Delete", "Owner", new { id = @item.Id })'"><i
+                                                    class="fas fa-solid fa-trash"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+
+                <input type="button" value="Create New" class="btn btn-create"
+                    onclick="location.href='@Url.Action("Create", "Owner")'" />
+            </div>
+
+
+
+
+
+        </div>
+
+</section>
+
+
+
+
+<script>
+
+    $('#table_user').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": false,
+        "autoWidth": false,
+        "responsive": true,
+    });</script>

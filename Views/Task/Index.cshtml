@@ -3,69 +3,123 @@
 @{
     ViewData["Title"] = "Index";
 }
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <ol class="breadcrumb ">
+                    <li class="breadcrumb-item active">Task</li>
+                </ol>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+    </div>
+</section>
 
-<h1>Index</h1>
+<header>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Detail)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DDate)
-            </th>
-            <th>
-                Owners
-            </th>
-            <th>
-                Approver
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.stat)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Detail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Owners.own)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Approve.own)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.stat.status)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+  
+<link href='@Url.Content("~/css/site2.css")' rel="stylesheet" type="text/css" />
+</header>
+<section class="content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Task Table </h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped" id="table2">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Title)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Detail)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DDate)
+                            </th>
+                            <th>
+                                Owners
+                            </th>
+                            <th>
+                                Approver
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.stat)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Title)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Detail)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Owners.own)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Approve.own)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.stat.status)
+                                </td>
+                                <td>
+                                        <div class="col text-center">
+
+                                    <div class="btn-group">
+
+
+                                        <button type="button" class="btn btn-edit" 
+                                        onclick="location.href='@Url.Action("Edit", "Task", new { id = @item.Id })'"><i
+                                            class="fas fa-solid fa-pen"></i></button>
+                                        <button type="button" class="btn btn-detail"
+                                        onclick="location.href='@Url.Action("Details", "Task", new { id = @item.Id })'"><i
+                                            class="fas fa-regular fa-info"></i></button>
+                                        <button type="button" class="btn btn-delete"
+                                        onclick="location.href='@Url.Action("Delete", "Task", new { id = @item.Id })'"><i
+                                            class="fas fa-solid fa-trash"></i></button>
+                                    </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <input type="button" value="Create New" id="btndownload" class="btn btn-create"
+                    onclick="location.href='@Url.Action("Create", "Task")'" />
+            </div>
+        </div>
+
+
+    </div>
+</section>
+<script>
+    $('#table2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": false,
+        "autoWidth": false,
+        "responsive": true,
+    });</script>

@@ -3,15 +3,30 @@
 
 <head>
     @* <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> *@
+
+    <link rel="stylesheet" href="~/plugins/chart.js/Chart.css">
+    <link rel="stylesheet" href="~/plugins/chart.js/Chart.min.css">
+    <link rel="stylesheet" href="~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/css/site2.css">
+
+
+
     <script src="~/plugins/chart.js/Chart.bundle.js"></script>
-        <script src="~/plugins/chart.js/Chart.bundle.min.js"></script>
-        <script src="~/plugins/chart.js/Chart.js"></script>
-        <script src="~/plugins/chart.js/Chart.min.js"></script>
-        <link rel="stylesheet" href="~/plugins/chart.js/Chart.css">
-        <link rel="stylesheet" href="~/plugins/chart.js/Chart.min.css">
+    <script src="~/plugins/chart.js/Chart.bundle.min.js"></script>
+    <script src="~/plugins/chart.js/Chart.js"></script>
+    <script src="~/plugins/chart.js/Chart.min.js"></script>
+    <script src="~/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/plugins/select2/js/select2.min.js"></script>
+
+
+
+
 
 
     <style>
+        %
+
         /* width */
         ::-webkit-scrollbar {
             width: 10px;
@@ -144,77 +159,112 @@
 
     });
 </script>
-
-
-
-<form asp-controller="Home" asp-action="Export" method="post" enctype="multipart/form-data">
-    <div class="row">
-        <div class="col-md-3">
-            <select name="singleChange" id="123456" class="form-control " asp-items="ViewBag.OwnerId"
-                onchange="singleSelectChangeValue();  " style="text-align: center;">
-                <option>--- select Owner Task ---</option>
-
-            </select>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-
-                <input type="file" id="fileupload" name="files" class="form-control" />
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <ol class="breadcrumb ">
+                    <li class="breadcrumb-item active">Home</li>
+                </ol>
+            </div>
+            <div class="col-md-6">
 
             </div>
-
-
         </div>
-        <div class="col-md-3">
-            <input type="button" name="Upload" value="Upload" id="btnupload" class="btn btn-primary" />
 
-            <a href="@Url.Action("Download", "Home")">Download</a>
+        <form>
+            <div class="row">
 
-        </div>
-        <div class="col-md-3">
-            <input type="submit" name="Export" value="Create and Export" id="btnExport" 13 class="btn btn-primary"
-                asp-action="Export" />
-        </div>
+                <div class="col-md-4">
+                    <select name="singleChange" id="123456" class="form-control select2bs4 select2-danger"
+                        data-dropdown-css-class="select2-danger" asp-items="ViewBag.OwnerId"
+                        onchange="singleSelectChangeValue();" style="width: 100%;">
+                        <option selected="selected">select user</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="file" class="custom-file-input" name="files" id="fileupload">
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+
+                </div>
+                <div class="col-md-4">
+                    <input type="button" name="Upload" value="Upload" id="btnupload" class="btn btn-dark"
+                        style="background: #97C1A9;" />
+                    <input type="button" value="Download" id="btndownload" class="btn btn-dark"
+                        style="background: #8FCACA;" onclick="location.href='@Url.Action("Download", "Home")'" />
+
+
+                </div>
+            </div>
+        </form>
+
     </div>
 
-</form>
 
+</section>
 
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header" style="background:#55CBCD;">
+                        <h3 class="card-title">Pie Chart</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="divchart">
+                            <div>
+                                <canvas id="myChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header" style="background: #FFDBCC;">
+                        <h3 class="card-title">Tasks Table</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="" id="12345">
+                            <table class="table table-bordered table-striped table-light-warning" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Detail</th>
+                                        <th>Start</th>
+                                        <th>Deadline</th>
+                                        <th>Aprrover</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="1245"></tbody>
+                            </table>
+                        </div>
+                    </div>
 
+                </div>
+            </div>
 
-<div class="row pt-5">
-    <div id="divchart" class="col-md-6">
-        <div>
-            <canvas id="myChart"></canvas>
         </div>
-    </div>
-    <div class="col-md-6" id="12345">
-        <table class="table table-responsive" id="table1">
-            <thead>
-                <th>Title</th>
-                <th>Detail</th>
-                <th>Start</th>
-                <th>Deadline</th>
-                <th>Aprrover</th>
-                <th>Status</th>
-            </thead>
-            <tbody id="1245"></tbody>
-        </table>
-    </div>
-    <div class="col-md-4">
 
     </div>
-</div>
-</div>
+</section>
 
-<style>
-    .dt-button {
-        background: red !important;
-    }
-</style>
+
+
 
 <script>
+    $(function () {
+        $('.select2').select2()
 
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+            theme: 'bootstrap4'
+
+        })
+
+    });
     var myChart = new Chart();
     //var table = new DataTable();
 
@@ -249,12 +299,64 @@
                 create_table(respone);
 
                 var table = $('#table1').DataTable({
-                    "scrollY": "200px",
                     "paging": true,
-                    dom: 'B<"clear">lfrtip',
-                    buttons: true
+                    "lengthChange": false,
+                    "searching": false,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": true,
+                    "responsive": true,
+                    dom: 'Bfrtip',
+                    buttons: [
+                        {
+                            extend: 'copyHtml5',
+                            text: 'copy',
+                            titleAttr: 'copy table data',
+                            className: 'btn btn-primary'
 
-                });
+                        },
+                        {
+                            extend: 'csvHtml5',
+                            text: 'csv',
+                            titleAttr: 'Export as csv',
+                            filename: function () {
+                                var d = new Date();
+                                var n = d.toDateString();
+                                return n + " csv";
+
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            text: 'excel',
+                            titleAttr: 'Export as excel',
+                            filename: function () {
+                                var d = new Date();
+                                var n = d.toDateString();
+                                return n + " excel";
+
+                            }
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            text: 'pdf',
+                            titleAttr: 'Export as pdf',
+                            filename: function () {
+                                var d = new Date();
+                                var n = d.toDateString();
+                                return n + " pdf";
+
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            text: 'print',
+                            titleAttr: 'print this table',
+
+                        }
+                    ]
+
+                }).buttons().container().appendTo('#table1_wrapper .col-md-6:eq(0)');
 
 
             },
@@ -335,9 +437,10 @@
 
     }
 
- 
+
 
 </script>
+
 
 
 </html>

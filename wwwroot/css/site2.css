@@ -15,75 +15,41 @@
 	min-height: 250px;
 }
 
+.btn-edit
+{
+	background-color: #97C1A9;
+}
+.btn-detail
+{
 
+	background-color: #ABDEE6;
+}
+.btn-delete
+{
+	background-color: #FF968A;
+}
+.btn-add
+{
 
-.navbar-custom {
-    background-color: #C37B89;
-    border-color: #bdb0b0;
+	background-color:#ffee93;
+	transition-duration: 00.1s;
 }
-/* Title */
-.navbar-custom .navbar-brand {
-    color: #777;
+.btn-add:hover
+{
+	background-color: #fce878;
+	
 }
-.navbar-custom .navbar-brand:hover,
-.navbar-custom .navbar-brand:focus {
-    color: #bdb0b0;
-}
-/* Link */
-.navbar-custom .navbar-nav > li > a {
-    color: #777;
-}
-.navbar-custom .navbar-nav > li > a:hover,
-.navbar-custom .navbar-nav > li > a:focus {
-    color: #333;
-}
-.navbar-custom .navbar-nav > .active > a,
-.navbar-custom .navbar-nav > .active > a:hover,
-.navbar-custom .navbar-nav > .active > a:focus {
-    color: #555;
-    background-color: #E7E7E7;
-}
-.navbar-custom .navbar-nav > .open > a,
-.navbar-custom .navbar-nav > .open > a:hover,
-.navbar-custom .navbar-nav > .open > a:focus {
-    color: #555;
-    background-color: #d9ace4;
-}
-/* Caret */
-.navbar-custom .navbar-nav > .dropdown > a .caret {
-    border-top-color: #777;
-    border-bottom-color: #777;
-}
-.navbar-custom .navbar-nav > .dropdown > a:hover .caret,
-.navbar-custom .navbar-nav > .dropdown > a:focus .caret {
-    border-top-color: #333;
-    border-bottom-color: #333;
-}
-.navbar-custom .navbar-nav > .open > a .caret,
-.navbar-custom .navbar-nav > .open > a:hover .caret,
-.navbar-custom .navbar-nav > .open > a:focus .caret {
-    border-top-color: #555;
-    border-bottom-color: #555;
-}
-/* Mobile version */
-.navbar-custom .navbar-toggle {
-    border-color: #DDD;
-}
-.navbar-custom .navbar-toggle:hover,
-.navbar-custom .navbar-toggle:focus {
-    background-color: #DDD;
-}
-.navbar-custom .navbar-toggle .icon-bar {
-    background-color: #CCC;
-}
-@media (max-width: 767px) {
-    .navbar-custom .navbar-nav .open .dropdown-menu > li > a {
-        color: #777;
-    }
-    .navbar-custom .navbar-nav .open .dropdown-menu > li > a:hover,
-    .navbar-custom .navbar-nav .open .dropdown-menu > li > a:focus {
-          color: #333;
-    }
-    
+.btn-create
+{
+	background-color: #A2E1DB;
+
 }
 
+.btn-create {
+	transition-duration: 0.1s;
+  }
+  
+.btn-create:hover {
+	background-color: #8FCACA; /* Green */
+	color: white;
+  }

@@ -3,28 +3,84 @@
 @{
     ViewData["Title"] = "Details";
 }
+@*
+    <h1>Details</h1>
 
-<h1>Details</h1>
-
-<div>
+    <div>
     <h4>Owner</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.own)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.own)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Department)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Department)
-        </dd>   
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.own)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.own)
+    </dd>
+    <dt class = "col-sm-2">
+    @Html.DisplayNameFor(model => model.Department)
+    </dt>
+    <dd class = "col-sm-10">
+    @Html.DisplayFor(model => model.Department)
+    </dd>
     </dl>
-</div>
-<div>
+    </div>
+    <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
-</div>
+    </div> *@
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <ol class="breadcrumb ">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Owner" asp-action="Index">User</a></li>
+                    <li class="breadcrumb-item active">Detail</li>
+                </ol>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">User Detail</h3>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.own)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.own)
+                            </dd>
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.Department)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.Department)
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="card-footer">
+
+
+                              <button type="button" class="btn btn-secondary"
+                            onclick="location.href='@Url.Action("Index", "Owner")'">Back</button>
+                        <button type="button" class="btn btn-create"
+                            onclick="location.href='@Url.Action("Edit", "Owner", new { id = @Model.Id })'">Edit</button>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

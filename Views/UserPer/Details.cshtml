@@ -4,7 +4,11 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Detail</h1>
+<head>
+    <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/site2.css">
+</head>
+@* <h1>Detail</h1> *@
 <style>
     /* width */
     ::-webkit-scrollbar {
@@ -16,78 +20,155 @@
         background: #f1f1f1;
     }
 
-    /* Handle */
+      /* Handle */
     ::-webkit-scrollbar-thumb {
-        background: #C37B89;
+        background: #F3B0C3;
     }
 
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
-        background: #555;
+        background: #FF968A;
     }
 </style>
-<h4>User Permission Detail</h4>
-<hr />
-<div asp-action="Details">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="row">
-        <div class="col-md-2">
-            <h6> User name :</h6>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">@Html.DisplayFor(model => model.Ownerss.own)</div>
-    </div>
+@*
     <div class="row pt-3">
-        <div class="col-md-4">
-            <h6>Permission </h6>
-            <div class="scrollbar">
-                <div class="force-overflow">
-                    @foreach (var item in Model.AvailablePermission)
-                    {
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="SelectedPermission" value="@item.Value"
-                                checked="@item.Selected" disabled @if(Model.SelectedPermission.Contains(item.Value)) {
-                                <text> checked </text>
-                            }
-                            /> @item.Text
-                            </label>
-                        </div>
-                    }
-                </div>
-            </div>
-            <div class="col-md-6 ">
-                @* <div class="scrollbar">
-                    <div class="force-overflow">
-                    @foreach (var item in Model.AvailablePermission)
-                    {
+    <div class="col-md-4">
+    <h6>Permission </h6>
+    <div class="scrollbar">
+    <div class="force-overflow">
+    @foreach (var item in Model.AvailablePermission)
+    {
+    <div class="checkbox">
+    <label>
+    <input type="checkbox" name="SelectedPermission" value="@item.Value"
+    checked="@item.Selected" disabled @if(Model.SelectedPermission.Contains(item.Value)) {
+    <text> checked </text>
+    }
+    /> @item.Text
+    </label>
+    </div>
+    }
+    </div>
+    </div>
+    <div class="col-md-6 "> *@
+@* <div class="scrollbar">
+    <div class="force-overflow">
+    @foreach (var item in Model.AvailablePermission)
+    {
 
-                    <div class="checkbox">
-                    <label>
-                    <input type="checkbox" name="SelectedPermission" value="@item.Value" checked = "@item.Selected" disabled
-                    @if(Model.SelectedPermission.Contains(item.Value)) { <text> checked </text>
-                    }
-                    /> @item.Text
-                    </label>
-                    </div>
-                    }
-                    </div> *@
-            </div>
-        </div>
+    <div class="checkbox">
+    <label>
+    <input type="checkbox" name="SelectedPermission" value="@item.Value" checked = "@item.Selected" disabled
+    @if(Model.SelectedPermission.Contains(item.Value)) { <text> checked </text>
+    }
+    /> @item.Text
+    </label>
+    </div>
+    }
+    </div> *@
+@* </div>
+    </div>
 
     </div>
 
     <div class="row pt-5">
-        <div class="col-md-4">
-            <div>
-                <a asp-action="Index">Back to List</a>
+    <div class="col-md-4">
+    <div>
+    <a asp-action="Index">Back to List</a>
+    </div>
+    </div>
+    </div>
+    </div> *@
+
+
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <ol class="breadcrumb ">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="UserPer" asp-action="Index">User
+                            Permission</a></li>
+                    <li class="breadcrumb-item active">Detail</li>
+
+                </ol>
+            </div>
+            <div class="col-md-6">
             </div>
         </div>
     </div>
-</div>
+</section>
 
 
+
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">User Permission Detail</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong> User name :</strong> <span>
+                                    @Html.DisplayFor(model => model.Ownerss.own)
+                                </span>
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+
+
+
+                            <div class="col-md-4">
+                                <strong>Permission </strong>
+                                <div class="scrollbar pt-2">
+                                    <div class="force-overflow">
+                                        @foreach (var item in Model.AvailablePermission)
+                                        {
+
+
+                                            <div class="form-group clearfix">
+
+                                                <div class="icheck-danger ">
+
+                                                    <input type="checkbox" id="@item.Text" name="SelectedPermission"
+                                                    value="@item.Value" checked="@item.Selected" disabled
+                                                    @if(Model.SelectedPermission.Contains(item.Value)) { <text>
+                                                checked </text>}/><label for="@item.Text"></label>@item.Text
+
+
+                                                </div>
+                                            </div>
+
+
+
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+                    <div class="card-footer">
+
+                        <div class="form-group">
+                            <button type="button" class="btn btn-secondary"
+                                onclick="location.href='@Url.Action("Index", "UserPer")'">Back</button>
+                         
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 
 
