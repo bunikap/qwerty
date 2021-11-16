@@ -4,14 +4,20 @@
     ViewData["Title"] = "Create";
 }
 
+<head>
 
+
+    <script src="~/plugins/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/plugins/jquery-validation/additional-methods.min.js"></script>
+</head>
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-md-6">
                 <ol class="breadcrumb ">
                     <li class="breadcrumb-item"><a asp-area="" asp-controller="Owner" asp-action="Index">User</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Owner" asp-action="Create">Create</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Owner" asp-action="Create">Create</a>
+                    </li>
                     <li class="breadcrumb-item active">Add Department</li>
                 </ol>
             </div>
@@ -31,7 +37,7 @@
                     <div class="card-header">
                         <h3 class="card-title">Add Department</h3>
                     </div>
-                    <form asp-action="Create">
+                    <form asp-action="Create" id="quickForm">
                         <div class="card-body">
 
                             <div class="row">
@@ -39,7 +45,7 @@
                                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                     <div class="form-group">
                                         <label asp-for="department" class="control-label"></label>
-                                        <input asp-for="department" class="form-control" />
+                                        <input asp-for="department" type="text" name="dep" class="form-control" />
 
                                     </div>
 
@@ -72,6 +78,43 @@
 
 
 </section>
+<script>
+    $(function () {
+        $.validator.setDefaults({
+            submitHandler: function () {
+                alert("Form successful submitted!");
+            }
+        });
+        $('#quickForm').validate({
+            rules: {
+                dep: {
+                    required: true,
+                },
+
+            },
+            messages: {
+                dep: {
+                    required: "Please enter Department",
+
+                },
+
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+</script>
+
+
 @section Scripts {
 @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
