@@ -20,7 +20,7 @@ namespace qwerty.Controllers
         // GET: Owner
         public async Task<IActionResult> Index()
         {
-            var qwertyContext = _context.Owner.Include(o => o.Permissionn).Include(o => o.departmentt);
+            var qwertyContext = _context.Owner.Include(o => o.Permissionn).Include(o => o.departmentt).Where(s=>s.visible==1);
 
             return View(await qwertyContext.ToListAsync());
 
@@ -142,7 +142,7 @@ namespace qwerty.Controllers
                 return NotFound();
             }
 
-            var owner = await _context.Owner.Include(o => o.Permissionn).FirstOrDefaultAsync(m => m.Id == id);
+            var owner = await _context.Owner.Include(o => o.Permissionn).Include(o=>o.departmentt).FirstOrDefaultAsync(m => m.Id == id);
             if (owner == null)
             {
                 return NotFound();
@@ -157,7 +157,8 @@ namespace qwerty.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var owner = await _context.Owner.FindAsync(id);
-            _context.Owner.Remove(owner);
+            owner.visible=0;
+            _context.Owner.Update(owner);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
