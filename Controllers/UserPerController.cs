@@ -23,7 +23,8 @@ namespace qwerty.Controllers
         // GET: UserPer
         public async Task<IActionResult> Index()
         {
-            var qwertyContext = _context.UserPer.Include(u => u.Ownerss).Include(u => u.Permissions);
+            var qwertyContext = _context.UserPer.Include(u => u.Ownerss).Include(u => u.Permissions).Where(s=>s.visible==1);
+        
             var query = qwertyContext.Select(s => new { UserId = s.OwnerId, User = s.Ownerss.own, Permission = s.PermissionsId, per = s.Permissions.permission }).Distinct().ToList();
             var permission_list = _context.Permission.ToList();
             DataTable dt = new DataTable();
@@ -69,7 +70,7 @@ namespace qwerty.Controllers
             }
             var userPer = await _context.UserPer
                 .Include(u => u.Ownerss)
-                .Include(u => u.Permissions)
+                .Include(u => u.Permissions).Where(s =>s.visible==1)
                 .FirstOrDefaultAsync(m => m.OwnerId == id);
             userPer.AvailablePermission = GetDefaultPermission(id);
             if (userPer == null)
@@ -82,7 +83,7 @@ namespace qwerty.Controllers
         // GET: UserPer/Create
         public IActionResult Create()
         {
-            ViewData["OwnerId"] = new SelectList(_context.Owner, "Id", "own");
+            ViewData["OwnerId"] = new SelectList(_context.Owner.Where(s => s.visible==1), "Id", "own");
             var UserModel = new UserPer();
             UserModel.AvailablePermission = GetPermission();
             return View(UserModel);
@@ -98,12 +99,12 @@ namespace qwerty.Controllers
             {
                 foreach (var item in userPer.SelectedPermission)
                 {
-                    var User = new UserPer { Id = userPer.Id, OwnerId = userPer.OwnerId, PermissionsId = Int16.Parse(item) };
+                    var User = new UserPer { Id = userPer.Id, OwnerId = userPer.OwnerId, PermissionsId = Int16.Parse(item), visible=1 };
                     _context.Add(User);
                     await _context.SaveChangesAsync();
                 }
             }
-            ViewData["OwnerId"] = new SelectList(_context.Owner, "Id", "own", userPer.OwnerId);
+            ViewData["OwnerId"] = new SelectList(_context.Owner.Where(s => s.visible==1), "Id", "own", userPer.OwnerId);
             return RedirectToAction(nameof(Index));
         }
         // GET: UserPer/Edit/5
@@ -115,7 +116,7 @@ namespace qwerty.Controllers
             }
             var userPer = await _context.UserPer
                 .Include(u => u.Ownerss)
-                .Include(u => u.Permissions)
+                .Include(u => u.Permissions).Where(s =>s.visible==1)
                 .FirstOrDefaultAsync(m => m.OwnerId == id);
 
             userPer.AvailablePermission = GetDefaultPermission(id);
@@ -123,7 +124,7 @@ namespace qwerty.Controllers
             {
                 return NotFound();
             }
-            ViewData["PermissionsId"] = new SelectList(_context.Permission, "Id", "permission", userPer.PermissionsId);
+            ViewData["PermissionsId"] = new SelectList(_context.Permission.Where(s =>s.visible==1), "Id", "permission", userPer.PermissionsId);
             return View(userPer);
         }
 
@@ -139,17 +140,18 @@ namespace qwerty.Controllers
             }
             userPer.AvailablePermission = GetDefaultPermission(id);
             var Selected = userPer.SelectedPermission;
-            var User_delete = _context.UserPer.Where(x => x.OwnerId == id).ToList();
+            var User_delete = _context.UserPer.Where(x => x.OwnerId == id).Where(s => s.visible==1).ToList();
             foreach (var item in User_delete)
             {
-                _context.UserPer.Remove(item);
+                item.visible=0;
+                _context.UserPer.Update(item);
                 await _context.SaveChangesAsync();
             }
             if (ModelState.IsValid)
             {
                 foreach (var item in Selected)
                 {
-                    var User = new UserPer { OwnerId = (int)id, PermissionsId = Int16.Parse(item) };
+                    var User = new UserPer { OwnerId = (int)id, PermissionsId = Int16.Parse(item), visible=1 };
                     _context.Add(User);
                     await _context.SaveChangesAsync();
                 }
@@ -166,7 +168,7 @@ namespace qwerty.Controllers
             }
             var userPer = await _context.UserPer
                 .Include(u => u.Ownerss)
-                .Include(u => u.Permissions)
+                .Include(u => u.Permissions).Where(s =>s.visible==1)
                 .FirstOrDefaultAsync(m => m.OwnerId == id);
             userPer.AvailablePermission = GetForDelete(id);
             if (userPer == null)
@@ -184,7 +186,8 @@ namespace qwerty.Controllers
             var userPer = _context.UserPer.Where(x => x.OwnerId == Id).ToList();
             foreach (var item in userPer)
             {
-                _context.UserPer.Remove(item);
+                item.visible=0;
+                _context.UserPer.Update(item);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
@@ -193,7 +196,7 @@ namespace qwerty.Controllers
         private IList<SelectListItem> GetPermission()
         {
             List<SelectListItem> List_permission = new List<SelectListItem>();
-            var AllPermission = _context.Permission.ToList();
+            var AllPermission = _context.Permission.Where(s =>s.visible==1).ToList();
             for (int i = 0; i < AllPermission.Count(); i++)
             {
                 List_permission.Add(new SelectListItem { Text = AllPermission[i].permission, Value = AllPermission[i].Id.ToString() });
@@ -204,7 +207,7 @@ namespace qwerty.Controllers
         private IList<SelectListItem> GetDefaultPermission(int? Id)
         {
             List<SelectListItem> List_DefaultPermisison = new List<SelectListItem>();
-            var qwertyContext = _context.UserPer.Include(u => u.Ownerss).Include(u => u.Permissions);
+            var qwertyContext = _context.UserPer.Include(u => u.Ownerss).Include(u => u.Permissions).Where(s =>s.visible==1);
             var query = qwertyContext.Select(s => new { UserId = s.OwnerId, User = s.Ownerss.own, Permission = s.PermissionsId, per = s.Permissions.permission }).Distinct().Where(s => s.UserId == Id).ToList();
             var permission = _context.Permission.ToList();
             if (Id == null)
@@ -234,9 +237,9 @@ namespace qwerty.Controllers
         private IList<SelectListItem> GetForDelete(int? Id)
         {
             List<SelectListItem> List_ForDelete = new List<SelectListItem>();
-            var qwertyContext = _context.UserPer.Include(u => u.Ownerss).Include(u => u.Permissions);
+            var qwertyContext = _context.UserPer.Include(u => u.Ownerss).Include(u => u.Permissions).Where(s=>s.visible==1);
             var query = qwertyContext.Select(s => new { UserId = s.OwnerId, User = s.Ownerss.own, Permission = s.PermissionsId, per = s.Permissions.permission }).Distinct().Where(s => s.UserId == Id).ToList();
-            var permissions = _context.Permission.ToList();
+            var permissions = _context.Permission.Where(s=>s.visible==1).ToList();
             if (Id == null)
             {
                 return null;
