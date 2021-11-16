@@ -24,8 +24,10 @@ namespace qwerty.Controllers
         public async Task<IActionResult> Index()
         {
             var qwertyContext = _context.UserPer.Include(u => u.Ownerss).Include(u => u.Permissions).Where(s=>s.visible==1);
-        
+            
             var query = qwertyContext.Select(s => new { UserId = s.OwnerId, User = s.Ownerss.own, Permission = s.PermissionsId, per = s.Permissions.permission }).Distinct().ToList();
+           
+    
             var permission_list = _context.Permission.ToList();
             DataTable dt = new DataTable();
             dt.Clear();
@@ -230,6 +232,7 @@ namespace qwerty.Controllers
                 }
 
             }
+
             return List_DefaultPermisison;
         }
 
