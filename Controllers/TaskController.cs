@@ -21,7 +21,7 @@ namespace qwerty.Controllers
         // GET: Task
         public async Task<IActionResult> Index()
         {
-            var qwertyContext = _context.Tasks.Include(t => t.Approve).Include(t => t.Owners).Include(t => t.stat);
+            var qwertyContext = _context.Tasks.Include(t => t.Approve).Include(t => t.Owners).Include(t => t.stat).Where(s =>s.visible==1);
             return View(await qwertyContext.ToListAsync());
         }
 
@@ -49,12 +49,12 @@ namespace qwerty.Controllers
         // GET: Task/Create
         public IActionResult Create()
         {
-            var name_list = from m in _context.UserPer
-                            join n in _context.Owner on m.OwnerId equals n.Id
-                            select new { Id = m.OwnerId, name = n.own, p = m.PermissionsId};
+            var name_list = from m in _context.UserPer.Where(s=>s.visible==1)
+                            join n in _context.Owner.Where(s=>s.visible==1) on m.OwnerId equals n.Id
+                            select new { Id = m.OwnerId, name = n.own, p = m.Permissions.permission};
 
-            ViewData["ApproveId"] = new SelectList(name_list.Where(s => s.p == 1), "Id", "name");
-            ViewData["OwnersId"] = new SelectList(name_list.Where(s => s.p == 2), "Id", "name");
+            ViewData["ApproveId"] = new SelectList(name_list.Where(s => s.p == "Approve"), "Id", "name");
+            ViewData["OwnersId"] = new SelectList(name_list.Where(s => s.p == "Owner"), "Id", "name");
             ViewData["StatusId"] = new SelectList(_context.Status, "Id", "status");
             return View();
         }
@@ -67,6 +67,7 @@ namespace qwerty.Controllers
         {
             if (ModelState.IsValid)
             {
+              tasks.visible=1;
                 _context.Add(tasks);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -96,12 +97,14 @@ namespace qwerty.Controllers
             {
                 return NotFound();
             }
-            var name_list = from m in _context.UserPer
-                            join n in _context.Owner on m.OwnerId equals n.Id
-                            select new { Id = m.OwnerId, name = n.own };
+            var name_list = from m in _context.UserPer.Where(s=>s.visible==1)
+                            join n in _context.Owner.Where(s=>s.visible==1) on m.OwnerId equals n.Id
+                            select new { Id = m.OwnerId, name = n.own ,Permission = m.Permissions.permission };
 
-            ViewData["ApproveId"] = new SelectList(name_list.Where(s => s.Id == 2).Distinct(),"Id", "name", tasks.ApproveId);
-            ViewData["OwnersId"] = new SelectList(name_list.Where(s => s.Id == 1).Distinct(),"Id", "name" ,tasks.OwnersId);
+       
+
+            ViewData["ApproveId"] = new SelectList(name_list.Where(s=>s.Permission=="Approve"),"Id", "name", tasks.ApproveId);
+            ViewData["OwnersId"] = new SelectList(name_list.Where(s=>s.Permission=="Owner"),"Id", "name" ,tasks.OwnersId);
             ViewData["StatusId"] = new SelectList(_context.Status, "Id", "status", tasks.StatusId);
             return View(tasks);
         }
@@ -121,6 +124,7 @@ namespace qwerty.Controllers
             {
                 try
                 {
+                    tasks.visible=1;
                     _context.Update(tasks);
                     await _context.SaveChangesAsync();
                 }
@@ -137,14 +141,17 @@ namespace qwerty.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            var name_list = from m in _context.UserPer
-                            join n in _context.Owner on m.OwnerId equals n.Id
-                            select new { Id = m.OwnerId, name = n.own };
 
-            ViewData["ApproveId"] = new SelectList(name_list.Where(s => s.Id == 2).Distinct(),  "Id", "name",tasks.ApproveId);
-            ViewData["OwnersId"] = new SelectList(name_list.Where(s => s.Id == 1).Distinct(), "Id", "name", tasks.OwnersId);
+             var name_list = from m in _context.UserPer.Where(s=>s.visible==1)
+                            join n in _context.Owner.Where(s=>s.visible==1) on m.OwnerId equals n.Id
+                            select new { Id = m.OwnerId, name = n.own ,Permission = m.Permissions.permission };
 
+       
+
+            ViewData["ApproveId"] = new SelectList(name_list.Where(s=>s.Permission=="Approve"),"Id", "name", tasks.ApproveId);
+            ViewData["OwnersId"] = new SelectList(name_list.Where(s=>s.Permission=="Owner"),"Id", "name" ,tasks.OwnersId);
             ViewData["StatusId"] = new SelectList(_context.Status, "Id", "status", tasks.StatusId);
+           
             return View(tasks);
         }
 
@@ -159,7 +166,7 @@ namespace qwerty.Controllers
             var tasks = await _context.Tasks
                 .Include(t => t.Approve)
                 .Include(t => t.Owners)
-                .Include(t => t.stat)
+                .Include(t => t.stat).Where(s=>s.visible==1)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (tasks == null)
             {
@@ -175,7 +182,8 @@ namespace qwerty.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var tasks = await _context.Tasks.FindAsync(id);
-            _context.Tasks.Remove(tasks);
+            tasks.visible=0;
+            _context.Tasks.Update(tasks);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
