@@ -20,7 +20,7 @@ namespace qwerty.Controllers
         // GET: Owner
         public async Task<IActionResult> Index()
         {
-            var qwertyContext = _context.Owner.Include(o => o.Permissionn);
+            var qwertyContext = _context.Owner.Include(o => o.Permissionn).Include(o => o.Departmentt);
 
             return View(await qwertyContext.ToListAsync());
 
@@ -36,7 +36,7 @@ namespace qwerty.Controllers
             }
 
             var owner = await _context.Owner
-                .Include(o => o.Permissionn)
+                .Include(o => o.Permissionn).Include(o => o.Departmentt).Where(s=>s.visible==1)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (owner == null)
             {
@@ -49,7 +49,8 @@ namespace qwerty.Controllers
         // GET: Owner/Create
         public IActionResult Create()
         {
-            ViewData["PermissionId"] = new SelectList(_context.Permission, "Id", "permission");
+            ViewData["PermissionId"] = new SelectList(_context.Permission.Where(s =>s.visible==1), "Id", "permission");
+            ViewData["DepartmentId"] = new SelectList(_context.Department.Where(s => s.visible==1),"Id","department");
             return View();
         }
 
@@ -57,7 +58,7 @@ namespace qwerty.Controllers
        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,own,Department,PermissionId")] Owner owner)
+        public async Task<IActionResult> Create([Bind("Id,own,DepartmentId,PermissionId")] Owner owner)
         {
             if (ModelState.IsValid)
             {
@@ -68,7 +69,8 @@ namespace qwerty.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));            
             }     
-            ViewData["PermissionId"] = new SelectList(_context.Permission, "Id", "permission", owner.PermissionId);
+            ViewData["PermissionId"] = new SelectList(_context.Permission.Where(s => s.visible==1), "Id", "permission", owner.PermissionId);
+            ViewData["DepartmentId"] = new SelectList(_context.Department.Where(s => s.visible==1),"Id","department",owner.DepartmentId);
             return View(owner);
         }
 
