@@ -11,6 +11,8 @@ namespace qwerty.Models
         public string permission { get; set; }
         // [NotMapped]
         // public int num{get;set;}
+         public int visible{get;set;}
+
     }
 }
 

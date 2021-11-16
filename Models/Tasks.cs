@@ -21,7 +21,7 @@ namespace qwerty.Models
 
         public int OwnersId { get; set; }
 
-   
+
         public Owner Owners { get; set; }
 
         public int ApproveId { get; set; }
@@ -36,11 +36,12 @@ namespace qwerty.Models
         public int StatusId { get; set; }
 
 
-  
+
 
         [Display(Name = "Status")]
         public Status stat { get; set; }
 
+        public int visible { get; set; }
 
 
 

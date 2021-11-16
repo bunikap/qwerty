@@ -62,6 +62,7 @@ namespace qwerty.Controllers
         {
             if (ModelState.IsValid)
             {
+                owner.visible=1;
                 _context.Add(owner);
                 await _context.SaveChangesAsync();
                 var Userper = new UserPer{ OwnerId = owner.Id, PermissionsId = owner.PermissionId };

@@ -17,14 +17,29 @@
 
 .btn-edit
 {
+	background-color: #B6CFB6;
+	transition-duration: 00.1s;
+}
+.btn-edit:hover
+{
 	background-color: #97C1A9;
 }
 .btn-detail
 {
 
 	background-color: #ABDEE6;
+	transition-duration: 00.1s;
+}
+.btn-detail:hover
+{
+	background-color: #89d9e6;
 }
 .btn-delete
+{
+	background-color: #FFAEA5;
+	transition-duration: 00.1s;
+}
+.btn-delete:hover
 {
 	background-color: #FF968A;
 }
@@ -50,6 +65,6 @@
   }
   
 .btn-create:hover {
-	background-color: #8FCACA; /* Green */
+	background-color: #8FCACA;
 	color: white;
   }

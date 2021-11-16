@@ -4,6 +4,8 @@ namespace qwerty.Models
     {
             public int Id {get;set;}
             public string status{get;set;}
+             public int visible{get;set;}
+
     }
     
 }
