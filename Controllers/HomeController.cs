@@ -35,7 +35,7 @@ namespace qwerty.Controllers
         public ActionResult Index()
         {
 
-            ViewData["OwnerId"] = new SelectList(_context.Owner, "Id", "own");
+            ViewData["OwnerId"] = new SelectList(_context.Owner.Where(s=>s.visible==1), "Id", "own");
 
 
             return View();
