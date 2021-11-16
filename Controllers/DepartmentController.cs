@@ -18,11 +18,11 @@ namespace qwerty.Controllers
         }
 
 
-        public IActionResult Index()
+         public async Task<IActionResult> Index()
         {
-
-            return View();
+            return View(await _context.Department.Where(s=>s.visible==1).ToListAsync());
         }
+
         public IActionResult Create()
         {
             var Department_List = _context.Department.Where(s => s.visible == 1).ToList();
@@ -46,6 +46,33 @@ namespace qwerty.Controllers
 
             }
             return View(depart);
+        }
+
+
+         public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var Department = await _context.Department.Where(s=>s.visible==1).FirstOrDefaultAsync(m => m.Id == id);
+            if (Department == null)
+            {
+                return NotFound();
+            }
+            return View(Department);
+        }
+
+        // POST: Permission/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var Department = await _context.Department.FindAsync(id);
+            Department.visible=0;
+            _context.Department.Update(Department);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
     }

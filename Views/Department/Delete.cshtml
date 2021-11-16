@@ -1,0 +1,53 @@
+@model qwerty.Models.Department
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Department"
+                            asp-action="Index">Department</a> </li>
+                    <li class="breadcrumb-item active">Delete</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            Confirm Delete Department
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-2">
+                                @Html.DisplayNameFor(model => model.department)
+                            </dt>
+                            <dd class="col-sm-10">
+                                @Html.DisplayFor(model => model.department)
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="card-footer">
+                        <form asp-action="Delete">
+                            <button type="button" class="btn btn-secondary"
+                                onclick="location.href='@Url.Action("Index", "Department")'">Back</button>
+                            <input type="hidden" asp-for="Id" />
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
