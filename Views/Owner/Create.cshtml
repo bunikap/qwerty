@@ -68,16 +68,39 @@
                         <div class="card-body">
 
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+
+                            <label asp-for="departmentt" class="control-label"></label>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-10">
+                                        <select asp-for="DepartmentId" class="form-control"
+                                            asp-items="ViewBag.DepartmentId">
+                                            <option value=''></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-1">
+                                        <button type="button" class="btn btn-create"
+                                            onclick="location.href='@Url.Action("Create", "Department")'"><i
+                                                class="fas fa-solid fa-plus"></i></button>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
                             <div class="form-group">
                                 <label asp-for="own" class="control-label"></label>
                                 <input asp-for="own" class="form-control" />
                                 <span asp-validation-for="own" class="text-danger"></span>
                             </div>
-                            @* <div class="form-group">
-                                <label asp-for="Department" class="control-label"></label>
-                                <input asp-for="Department" class="form-control" />
-                                <span asp-validation-for="Department" class="text-danger"></span>
-                            </div> *@
+
+
+
+
                             <div class="form-group">
                                 <label asp-for="Permissionn" class="control-label"></label>
                                 <select asp-for="PermissionId" class="form-control" asp-items="ViewBag.PermissionId">
