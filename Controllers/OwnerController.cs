@@ -72,11 +72,15 @@ namespace qwerty.Controllers
             ViewData["PermissionId"] = new SelectList(_context.Permission.Where(s => s.visible==1), "Id", "permission", owner.PermissionId);
             ViewData["DepartmentId"] = new SelectList(_context.Department.Where(s => s.visible==1),"Id","department",owner.DepartmentId);
             return View(owner);
+        
+        
+        
         }
 
         // GET: Owner/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+
             if (id == null)
             {
                 return NotFound();
@@ -134,7 +138,7 @@ namespace qwerty.Controllers
             }
 
             var owner = await _context.Owner
-                .Include(o => o.Permissionn)
+                .Include(o => o.Permissionn).Include(o=>o.Departmentt)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (owner == null)
             {
