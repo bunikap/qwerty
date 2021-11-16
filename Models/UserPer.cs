@@ -20,8 +20,6 @@ namespace qwerty.Models
         public IEnumerable<string> name { get; set; }
         [NotMapped]
         public IEnumerable<string> namePermission { get; set; }
-         public int visible{get;set;}
-
 
         public UserPer()
         {

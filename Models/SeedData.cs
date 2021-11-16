@@ -53,27 +53,14 @@ namespace qwerty.Models
                     new Permission
                     {
                         Id = 0,
-                        permission = "Owner",
-                        visible = 1
+                        permission = "Owner"
                     },
 
                     new Permission
                     {
                         Id = 1,
-                        permission = "Approve",
-                        visible = 1
+                        permission = "Approve"
 
-                    }
-                );
-                if(context.Department.Any())
-                {
-                    return;
-                }
-                context.Department.AddRange(
-                    new Department
-                    {
-                        department = "BPBI",
-                        visible=1
                     }
                 );
                 context.SaveChanges();

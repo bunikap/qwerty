@@ -23,9 +23,9 @@ namespace qwerty.Controllers
         // GET: UserPer
         public async Task<IActionResult> Index()
         {
-            var qwertyContext = _context.UserPer.Include(u => u.Ownerss).Include(u => u.Permissions).Where(s => s.visible==1);
+            var qwertyContext = _context.UserPer.Include(u => u.Ownerss).Include(u => u.Permissions);
             var query = qwertyContext.Select(s => new { UserId = s.OwnerId, User = s.Ownerss.own, Permission = s.PermissionsId, per = s.Permissions.permission }).Distinct().ToList();
-            var permission_list = _context.Permission.Where(s => s.visible==1).ToList();
+            var permission_list = _context.Permission.ToList();
             DataTable dt = new DataTable();
             dt.Clear();
             dt.Columns.Add("Id");
@@ -103,7 +103,7 @@ namespace qwerty.Controllers
                     await _context.SaveChangesAsync();
                 }
             }
-            ViewData["OwnerId"] = new SelectList(_context.Owner.Where(s=>s.visible==1), "Id", "own", userPer.OwnerId);
+            ViewData["OwnerId"] = new SelectList(_context.Owner, "Id", "own", userPer.OwnerId);
             return RedirectToAction(nameof(Index));
         }
         // GET: UserPer/Edit/5
@@ -123,7 +123,7 @@ namespace qwerty.Controllers
             {
                 return NotFound();
             }
-            ViewData["PermissionsId"] = new SelectList(_context.Permission.Where(s=>s.visible==1), "Id", "permission", userPer.PermissionsId);
+            ViewData["PermissionsId"] = new SelectList(_context.Permission, "Id", "permission", userPer.PermissionsId);
             return View(userPer);
         }
 
@@ -154,7 +154,7 @@ namespace qwerty.Controllers
                     await _context.SaveChangesAsync();
                 }
             }
-            ViewBag.OwnerId = new SelectList(_context.Owner.Where(s=>s.visible==1), "Id", "own", userPer.OwnerId);
+            ViewBag.OwnerId = new SelectList(_context.Owner, "Id", "own", userPer.OwnerId);
             return RedirectToAction(nameof(Index));
         }
         // GET: UserPer/Delete/5
@@ -184,7 +184,6 @@ namespace qwerty.Controllers
             var userPer = _context.UserPer.Where(x => x.OwnerId == Id).ToList();
             foreach (var item in userPer)
             {
-                // change to update 
                 _context.UserPer.Remove(item);
                 await _context.SaveChangesAsync();
             }
