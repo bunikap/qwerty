@@ -16,6 +16,7 @@ namespace qwerty.Data
         public DbSet<Status> Status { get; set; }
         public DbSet<UserPer> UserPer{get;set;}
         public DbSet<Permission> Permission{get;set;}
+        public DbSet<Department> Department {get;set;}
     
 
         // public DbSet<HomeModel> HomeModel {get;set;}

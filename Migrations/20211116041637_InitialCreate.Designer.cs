@@ -9,7 +9,7 @@ using qwerty.Data;
 namespace qwerty.Migrations
 {
     [DbContext(typeof(QwertyContext))]
-    [Migration("20211014072003_InitialCreate")]
+    [Migration("20211116041637_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,21 +19,21 @@ namespace qwerty.Migrations
                 .HasAnnotation("ProductVersion", "3.1.19")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("qwerty.Models.CheckBoxListItem", b =>
+            modelBuilder.Entity("qwerty.Models.Department", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsSelected")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("department")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.HasKey("ID");
+                    b.Property<int>("visible")
+                        .HasColumnType("int");
 
-                    b.ToTable("CheckBoxListItem");
+                    b.HasKey("Id");
+
+                    b.ToTable("Department");
                 });
 
             modelBuilder.Entity("qwerty.Models.Owner", b =>
@@ -42,8 +42,8 @@ namespace qwerty.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Department")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
 
                     b.Property<int>("PermissionId")
                         .HasColumnType("int");
@@ -51,7 +51,12 @@ namespace qwerty.Migrations
                     b.Property<string>("own")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<int>("visible")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("PermissionId");
 
@@ -68,6 +73,9 @@ namespace qwerty.Migrations
                         .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<int>("visible")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Permission");
@@ -81,6 +89,9 @@ namespace qwerty.Migrations
 
                     b.Property<string>("status")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("visible")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -116,6 +127,9 @@ namespace qwerty.Migrations
                         .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
                         .HasMaxLength(50);
 
+                    b.Property<int>("visible")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApproveId");
@@ -139,6 +153,9 @@ namespace qwerty.Migrations
                     b.Property<int>("PermissionsId")
                         .HasColumnType("int");
 
+                    b.Property<int>("visible")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerId");
@@ -150,6 +167,12 @@ namespace qwerty.Migrations
 
             modelBuilder.Entity("qwerty.Models.Owner", b =>
                 {
+                    b.HasOne("qwerty.Models.Department", "departmentt")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("qwerty.Models.Permission", "Permissionn")
                         .WithMany()
                         .HasForeignKey("PermissionId")
