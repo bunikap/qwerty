@@ -9,6 +9,7 @@ namespace qwerty.Models
         [Required]
         // [StringLength(50)]
         public string permission { get; set; }
+         public int visible{get;set;}
         // [NotMapped]
         // public int num{get;set;}
     }

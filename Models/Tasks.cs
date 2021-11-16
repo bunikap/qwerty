@@ -40,6 +40,7 @@ namespace qwerty.Models
 
         [Display(Name = "Status")]
         public Status stat { get; set; }
+         public int visible{get;set;}
 
 
 
