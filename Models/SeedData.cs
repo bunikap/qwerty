@@ -23,24 +23,28 @@ namespace qwerty.Models
                     new Status
                     {
                         Id = 1,
-                        status = "To-Do"
+                        status = "To-Do",
+                        visible=1
                     },
 
                     new Status
                     {
                         Id = 2,
-                        status = "Doing"
+                        status = "Doing",
+                        visible=1
 
                     },
                     new Status
                     {
                         Id = 3,
-                        status = "Done"
+                        status = "Done",
+                        visible=1
                     },
                        new Status
                        {
                            Id = 4,
-                           status = "Reject"
+                           status = "Reject",
+                        visible=1
                        }
 
 
@@ -53,15 +57,31 @@ namespace qwerty.Models
                     new Permission
                     {
                         Id = 0,
-                        permission = "Owner"
+                        permission = "Owner",
+                        visible=1
                     },
 
                     new Permission
                     {
                         Id = 1,
-                        permission = "Approve"
+                        permission = "Approve",
+                        visible=1
 
                     }
+                );
+                  if (context.Department.Any())
+                {
+                    return;   // DB has been seeded
+                }
+                context.Department.AddRange(
+                    new Department
+                    {
+                    
+                        department = "BPBI",
+                        visible=1
+                    }
+
+                
                 );
                 context.SaveChanges();
             }
