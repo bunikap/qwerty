@@ -15,6 +15,7 @@ namespace qwerty.Models
                     DbContextOptions<QwertyContext>>()))
             {
                 // Look for any movies.
+
                 if (context.Status.Any())
                 {
                     return;   // DB has been seeded
@@ -24,27 +25,27 @@ namespace qwerty.Models
                     {
                         Id = 1,
                         status = "To-Do",
-                        visible=1
+                        visible = 1
                     },
 
                     new Status
                     {
                         Id = 2,
                         status = "Doing",
-                        visible=1
+                        visible = 1
 
                     },
                     new Status
                     {
                         Id = 3,
                         status = "Done",
-                        visible=1
+                        visible = 1
                     },
                        new Status
                        {
                            Id = 4,
                            status = "Reject",
-                        visible=1
+                           visible = 1
                        }
 
 
@@ -56,32 +57,54 @@ namespace qwerty.Models
                 context.Permission.AddRange(
                     new Permission
                     {
-                        Id = 0,
-                        permission = "Owner",
-                        visible=1
+                        Id = 1,
+                        permission = "Admin",
+                        visible = 1
                     },
 
                     new Permission
                     {
-                        Id = 1,
+                        Id = 2,
                         permission = "Approve",
-                        visible=1
+                        visible = 1
 
+                    },
+                    new Permission
+                    {
+                        Id = 3,
+                        permission = "Owner",
+                        visible = 1
                     }
                 );
-                  if (context.Department.Any())
+                if (context.Department.Any())
                 {
                     return;   // DB has been seeded
                 }
                 context.Department.AddRange(
                     new Department
                     {
-                    
+                        Id = 1,
                         department = "BPBI",
-                        visible=1
+                        visible = 1
                     }
 
-                
+
+                );
+                if (context.Owner.Any())
+                {
+                    return;   // DB has been seeded
+                }
+                context.Owner.AddRange(
+                    new Owner
+                    {
+                        Id = 1,
+                        own = "admin",
+                        visible = 1,
+                        pswd = "p@ssw0rd",
+                        PermissionId = 1,
+                        DepartmentId =1
+                    }
+
                 );
                 context.SaveChanges();
             }
