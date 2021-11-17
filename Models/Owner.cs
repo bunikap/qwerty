@@ -16,7 +16,9 @@ namespace qwerty.Models
         [Display(Name = "Permission")]
 
         public Permission Permissionn { get; set; }
-         public int visible{get;set;}
+        public int visible{get;set;}
+        [Required(ErrorMessage ="Password is required")]
+        public string pswd {get;set;}
 
         // [NotMapped]
         // public ICollection<CheckBoxListItem> GetCheckBoxListItem { get; set; }
