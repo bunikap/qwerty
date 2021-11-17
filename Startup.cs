@@ -51,7 +51,7 @@ namespace qwerty
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=UserSession}/{action=Index}/{id?}");
             });
         }
     }
