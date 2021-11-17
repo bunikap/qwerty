@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using qwerty.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
+
 namespace qwerty
 {
     public class Startup
@@ -23,7 +25,16 @@ namespace qwerty
             
            services.AddDbContext<QwertyContext>(options =>
     options.UseMySql(Configuration.GetConnectionString("Default")));
-            
+            services.AddSession(option =>{
+
+
+                option.IdleTimeout =TimeSpan.FromMinutes(15);
+                option.Cookie.HttpOnly =true;
+                option.Cookie.IsEssential = true;
+
+
+            });
+            services.AddHttpContextAccessor();
 
         }
 
@@ -41,6 +52,7 @@ namespace qwerty
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+            app.UseSession();
             app.UseStaticFiles();
 
             app.UseRouting();
