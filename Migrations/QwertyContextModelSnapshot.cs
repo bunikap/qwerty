@@ -49,6 +49,10 @@ namespace qwerty.Migrations
                     b.Property<string>("own")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<string>("pswd")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<int>("visible")
                         .HasColumnType("int");
 
