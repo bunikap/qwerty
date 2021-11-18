@@ -49,11 +49,14 @@ namespace qwerty.Controllers
         }
 
 
-        public ActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
             HttpContext.Session.Clear();
+            
             var test = HttpContext.Session.GetString("userName");
-            return RedirectToAction("Index", "UserSession");
+           return RedirectToAction("Index", "UserSession");
+            
+            
         }
 
 

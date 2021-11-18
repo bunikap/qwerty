@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,12 +20,15 @@ namespace qwerty.Controllers
 
         // GET: Owner
         public async Task<IActionResult> Index()
+
         {
-            var qwertyContext = _context.Owner.Include(o => o.Permissionn).Include(o => o.departmentt).Where(s=>s.visible==1);
+     
+     
+                var qwertyContext = _context.Owner.Include(o => o.Permissionn).Include(o => o.departmentt).Where(s => s.visible == 1);
 
-            return View(await qwertyContext.ToListAsync());
+                return View(await qwertyContext.ToListAsync());
 
-
+            
         }
 
         // GET: Owner/Details/5
@@ -57,7 +61,7 @@ namespace qwerty.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,own,DepartmentId,PermissionId")] Owner owner)
+        public async Task<IActionResult> Create([Bind("Id,own,DepartmentId,PermissionId,pswd")] Owner owner)
         {
             if (ModelState.IsValid)
             {
@@ -100,7 +104,7 @@ namespace qwerty.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,own,DepartmentId,PermissionId")] Owner owner)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,own,DepartmentId,PermissionId,pswd")] Owner owner)
         {
             if (id != owner.Id)
             {
@@ -111,7 +115,7 @@ namespace qwerty.Controllers
             {
                 try
                 {
-                    owner.visible=1;
+                    owner.visible = 1;
                     _context.Update(owner);
                     await _context.SaveChangesAsync();
                 }
@@ -128,7 +132,7 @@ namespace qwerty.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PermissionId"] = new SelectList(_context.Permission.Where(s=>s.visible==1), "Id", "permission", owner.PermissionId);
+            ViewData["PermissionId"] = new SelectList(_context.Permission.Where(s => s.visible == 1), "Id", "permission", owner.PermissionId);
             ViewData["DepartmentId"] = new SelectList(_context.Department.Where(s => s.visible == 1), "Id", "department", owner.DepartmentId);
 
             return View(owner);
@@ -142,7 +146,7 @@ namespace qwerty.Controllers
                 return NotFound();
             }
 
-            var owner = await _context.Owner.Include(o => o.Permissionn).Include(o=>o.departmentt).FirstOrDefaultAsync(m => m.Id == id);
+            var owner = await _context.Owner.Include(o => o.Permissionn).Include(o => o.departmentt).FirstOrDefaultAsync(m => m.Id == id);
             if (owner == null)
             {
                 return NotFound();
@@ -157,7 +161,7 @@ namespace qwerty.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var owner = await _context.Owner.FindAsync(id);
-            owner.visible=0;
+            owner.visible = 0;
             _context.Owner.Update(owner);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

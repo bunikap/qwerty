@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using qwerty.Data;
 using qwerty.Models;
-
+using Microsoft.AspNetCore.Http;
 namespace qwerty.Controllers
 {
     public class UserPerController : Controller
@@ -23,6 +23,7 @@ namespace qwerty.Controllers
         // GET: UserPer
         public async Task<IActionResult> Index()
         {
+            
             var qwertyContext = _context.UserPer.Include(u => u.Ownerss).Include(u => u.Permissions).Where(s=>s.visible==1);
             
             var query = qwertyContext.Select(s => new { UserId = s.OwnerId, User = s.Ownerss.own, Permission = s.PermissionsId, per = s.Permissions.permission }).Distinct().ToList();
@@ -261,5 +262,10 @@ namespace qwerty.Controllers
             }
             return List_ForDelete;
         }
+   
+   
+    
+   
+   
     }
 }

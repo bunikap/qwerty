@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace qwerty.Controllers
@@ -8,7 +9,9 @@ namespace qwerty.Controllers
     {
         public IActionResult Index()
         {
+      
             return View();
         }
+       
     }
 }

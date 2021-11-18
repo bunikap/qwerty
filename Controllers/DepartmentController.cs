@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ namespace qwerty.Controllers
 
          public async Task<IActionResult> Index()
         {
+       
             return View(await _context.Department.Where(s=>s.visible==1).ToListAsync());
         }
 
@@ -74,6 +76,7 @@ namespace qwerty.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+       
 
     }
 }

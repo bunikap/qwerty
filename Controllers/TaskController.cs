@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace qwerty.Controllers
         // GET: Task
         public async Task<IActionResult> Index()
         {
+           
             var qwertyContext = _context.Tasks.Include(t => t.Approve).Include(t => t.Owners).Include(t => t.stat).Where(s =>s.visible==1);
             return View(await qwertyContext.ToListAsync());
         }
@@ -192,5 +194,6 @@ namespace qwerty.Controllers
         {
             return _context.Tasks.Any(e => e.Id == id);
         }
+
     }
 }

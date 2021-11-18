@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace qwerty.Controllers
         // GET: Permission
         public async Task<IActionResult> Index()
         {
+      
             return View(await _context.Permission.ToListAsync());
         }
 
@@ -86,5 +88,6 @@ namespace qwerty.Controllers
         {
             return _context.Permission.Any(e => e.Id == id);
         }
+ 
     }
 }
