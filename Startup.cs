@@ -22,15 +22,15 @@ namespace qwerty
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            
-           services.AddDbContext<QwertyContext>(options =>
-    options.UseMySql(Configuration.GetConnectionString("Default")));
-            services.AddSession(option =>{
+            services.AddDbContext<QwertyContext>(options =>
+     options.UseMySql(Configuration.GetConnectionString("Default")));
+            services.AddSession(option =>
+            {
 
 
-                option.IdleTimeout =TimeSpan.FromMinutes(15);
-                option.Cookie.HttpOnly =true;
-                option.Cookie.IsEssential = true;
+                option.IdleTimeout = TimeSpan.FromMinutes(15);
+                option.Cookie.HttpOnly = true;
+                option.Cookie.IsEssential = true;                
 
 
             });
