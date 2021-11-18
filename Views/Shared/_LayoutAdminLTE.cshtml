@@ -6,6 +6,9 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <META Http-Equiv="Cache-Control" Content="no-cache"/>
+<META Http-Equiv="Pragma" Content="no-cache"/>
+<META Http-Equiv="Expires" Content="0"/>
   <title>@ViewData["Title"] - qwerty</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css">
@@ -53,7 +56,36 @@
 </head>
 @{
   var name = Context.Session.GetString("userName");
+  var id = Context.Session.GetInt32("userId");
 }
+<script>
+
+$(document).ready(function () {
+$.ajax({
+            type: "get",
+            url: "@Url.Action("Check", "UserSession")",
+            contentType: "application/x-www-form-urlencoded",
+            @* data: data, *@
+            dataType: "Json",
+            success: function (respone) {
+              if(respone.result == false)
+              {
+                  window.location.href ="@Url.Action("Index", "UserSession")";
+              }
+              console.log(respone);
+            },
+            failure: function (response) {
+                alert(response.data);
+            }
+        });
+});
+
+
+
+
+  
+</script>
+
 <body class="hold-transition sidebar-mini layout-fixed">
   <div class="wrapper">
     <!---nevbar--->
@@ -80,7 +112,7 @@
             <a href="#" class="dropdown-item">
               <!-- Message Start -->
               <div class="media">
-                <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                <img src="~/dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                 <div class="media-body">
                   <h3 class="dropdown-item-title">
                     Brad Diesel
@@ -112,7 +144,7 @@
             <a href="#" class="dropdown-item">
               <!-- Message Start -->
               <div class="media">
-                <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                <img src="~/dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                 <div class="media-body">
                   <h3 class="dropdown-item-title">
                     Nora Silvester
@@ -156,7 +188,7 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link"asp-controller="UserSession" asp-action="Logout" role="button">
+          <a class="nav-link" asp-controller="UserSession" asp-action="Logout" role="button">
             <i class="fas fa-sign-out-alt"></i>
           </a>
         </li>
@@ -168,7 +200,7 @@
 
       <!-- Brand Logo -->
       <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-link">
-        <img src="dist/img/1.png" alt="codomo Logo" class="brand-image img-circle img-size-50 " style="opacity: .8">
+        <img src="~/dist/img/1.png" alt="codomo Logo" class="brand-image img-circle img-size-50 " style="opacity: .8">
         <span class="brand-text text-dark">CODOMO</span>
       </a>
 
@@ -178,11 +210,14 @@
 
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
           <div class="image">
-            <img src="dist/img/Patrick-Star-pinhead.jpg" class="img-circle elevation-2" alt="User Image">
+            <img src="~/dist/img/Patrick-Star-pinhead.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block"> @name</a>
+            <a href=@Url.Action("Details", "Owner", new { id = @id}) class="d-block"> @name</a>
           </div>
+
+
+
         </div>
 
         <!-- SidebarSearch Form -->
@@ -225,6 +260,7 @@
     </footer>
 
   </div>
+
   @* <script>
     $.widget.bridge('uibutton', $.ui.button)
     </script> *@
