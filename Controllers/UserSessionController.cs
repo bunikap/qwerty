@@ -28,7 +28,7 @@ namespace qwerty.Controllers
         public async Task<IActionResult> Index([Bind("Id,own,DepartmentId,PermissionId,pswd")] Owner owner)
         {
 
-            var findUser = _context.Owner.Where(s => s.own == owner.own).Where(s => s.pswd == owner.pswd);
+            var findUser = _context.Owner.Where(s => s.own == owner.own).Where(s =>s.visible==1).Where(s => s.pswd == owner.pswd);
 
             if (findUser.Count() > 0)
             {
