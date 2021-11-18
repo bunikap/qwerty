@@ -106,6 +106,23 @@ namespace qwerty.Models
                     }
 
                 );
+
+                if (context.UserPer.Any())
+                {
+                    return;   // DB has been seeded
+                }
+                context.UserPer.AddRange(
+                    new UserPer
+                    {
+                        Id = 1,
+                        OwnerId = 1,
+                        visible = 1 ,
+                        PermissionsId = 1,
+                       
+                    }
+                );
+
+                
                 context.SaveChanges();
             }
         }
