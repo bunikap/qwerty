@@ -52,11 +52,29 @@ namespace qwerty.Controllers
         public async Task<IActionResult> Logout()
         {
             HttpContext.Session.Clear();
-            
+
             var test = HttpContext.Session.GetString("userName");
-           return RedirectToAction("Index", "UserSession");
-            
-            
+            return RedirectToAction("Index", "UserSession");
+
+
+        }
+
+
+        [HttpGet]
+        public JsonResult Check()
+        {
+            if (HttpContext.Session.GetString("userName") == null)
+            {
+                var pass = false;
+                return Json(new { result = pass });
+
+            }
+            else
+            {
+                var pass = true;
+                return Json(new { result = pass });
+            }
+
         }
 
 
