@@ -30,56 +30,6 @@
         background: #FF968A;
     }
 </style>
-@*
-    <div class="row pt-3">
-    <div class="col-md-4">
-    <h6>Permission </h6>
-    <div class="scrollbar">
-    <div class="force-overflow">
-    @foreach (var item in Model.AvailablePermission)
-    {
-    <div class="checkbox">
-    <label>
-    <input type="checkbox" name="SelectedPermission" value="@item.Value"
-    checked="@item.Selected" disabled @if(Model.SelectedPermission.Contains(item.Value)) {
-    <text> checked </text>
-    }
-    /> @item.Text
-    </label>
-    </div>
-    }
-    </div>
-    </div>
-    <div class="col-md-6 "> *@
-@* <div class="scrollbar">
-    <div class="force-overflow">
-    @foreach (var item in Model.AvailablePermission)
-    {
-
-    <div class="checkbox">
-    <label>
-    <input type="checkbox" name="SelectedPermission" value="@item.Value" checked = "@item.Selected" disabled
-    @if(Model.SelectedPermission.Contains(item.Value)) { <text> checked </text>
-    }
-    /> @item.Text
-    </label>
-    </div>
-    }
-    </div> *@
-@* </div>
-    </div>
-
-    </div>
-
-    <div class="row pt-5">
-    <div class="col-md-4">
-    <div>
-    <a asp-action="Index">Back to List</a>
-    </div>
-    </div>
-    </div>
-    </div> *@
-
 
 
 <section class="content-header">
