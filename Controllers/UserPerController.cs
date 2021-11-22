@@ -30,55 +30,46 @@ namespace qwerty.Controllers
             connString = Configuration.GetConnectionString("Default");
         }
 
-     
+
 
         // GET: UserPer
         public async Task<IActionResult> Index()
         {
-
-            // var qwertyContext = _context.UserPer.Include(u => u.Ownerss).Include(u => u.Permissions).Where(s => s.visible == 1);
-
-            // var query = qwertyContext.Select(s => new { UserId = s.OwnerId, User = s.Ownerss.own, Permission = s.PermissionsId, per = s.Permissions.permission }).Distinct().ToList();
-
             List<UserPer> from_store = new List<UserPer>();
 
-            using(var conn = new MySqlConnection(connString))
+            using (var conn = new MySqlConnection(connString))
             {
                 var cmd = conn.CreateCommand();
                 await conn.OpenAsync();
-                cmd.CommandText ="s_userper";  
+                cmd.CommandText = "s_userper";
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@i_visible",1);
-              
+                cmd.Parameters.AddWithValue("@i_visible", 1);
 
-               var reader =  cmd.ExecuteReader();
-                if(reader.HasRows==true)
+
+                var reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
                 {
-                    foreach(var item in reader)
+                    foreach (var item in reader)
                     {
 
                         var row = new UserPer
                         {
                             OwnerId = reader.GetInt16("OwnerId"),
-                            Ownerss =new Owner{own = reader.GetString("own")},
+                            Ownerss = new Owner { own = reader.GetString("own") },
                             PermissionsId = reader.GetInt16("PermissionsId"),
-                            Permissions= new Permission{permission = reader.GetString("permission")}
+                            Permissions = new Permission { permission = reader.GetString("permission") }
 
                         };
                         from_store.Add(row);
-                        
+
                     }
-                    // foreach (var list in from_store){
-                        
-                    // }
+
 
                 }
 
 
 
-
             }
-
 
             var permission_list = _context.Permission.ToList();
             DataTable dt = new DataTable();
@@ -93,10 +84,10 @@ namespace qwerty.Controllers
             string name = "";
             DataRow dr = dt.NewRow();
             // foreach (var list in query)
-             foreach (var list in from_store)
+            foreach (var list in from_store)
 
             {
-               
+
                 if (name != list.Ownerss.own)
                 {
                     round += 1;
@@ -115,8 +106,10 @@ namespace qwerty.Controllers
             }
             dt.Rows.Add(dr);
             ViewBag.table = dt;
-            // await qwertyContext.ToListAsync()
+            // await from_store.ToListAsync()
             return View();
+
+
         }
 
         // GET: UserPer/Details/5
