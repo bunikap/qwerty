@@ -42,6 +42,7 @@ namespace qwerty.Controllers
         {
             if (ModelState.IsValid)
             {
+                per.visible =1;
                 _context.Add(per);
                 await _context.SaveChangesAsync();
                 // return RedirectToAction(nameof(Index));    
