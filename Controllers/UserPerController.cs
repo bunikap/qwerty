@@ -119,16 +119,44 @@ namespace qwerty.Controllers
             {
                 return NotFound();
             }
-            var userPer = await _context.UserPer
-                .Include(u => u.Ownerss)
-                .Include(u => u.Permissions).Where(s => s.visible == 1)
-                .FirstOrDefaultAsync(m => m.OwnerId == id);
-            userPer.AvailablePermission = GetDefaultPermission(id);
-            if (userPer == null)
+            List<UserPer> from_store = new List<UserPer>();
+
+            using (var conn = new MySqlConnection(connString))
             {
-                return NotFound();
+                var cmd = conn.CreateCommand();
+                await conn.OpenAsync();
+                cmd.CommandText = "s_GetUserPerbyId";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@i_userId", id);
+                cmd.Parameters.AddWithValue("@i_visible", 1);
+
+
+                var reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    foreach (var item in reader)
+                    {
+
+                        var row = new UserPer
+                        {
+                            OwnerId = reader.GetInt16("OwnerId"),
+                            Ownerss = new Owner { own = reader.GetString("own") },
+                            PermissionsId = reader.GetInt16("PermissionsId"),
+                            Permissions = new Permission { permission = reader.GetString("permission") },
+                            AvailablePermission = GetDefaultPermission(id)
+
+                        };
+                        from_store.Add(row);
+
+                    }
+
+
+                }
+                return View(from_store[0]);
             }
-            return View(userPer);
+
+
+
         }
 
         // GET: UserPer/Create
@@ -258,31 +286,63 @@ namespace qwerty.Controllers
         private IList<SelectListItem> GetDefaultPermission(int? Id)
         {
             List<SelectListItem> List_DefaultPermisison = new List<SelectListItem>();
-            var qwertyContext = _context.UserPer.Include(u => u.Ownerss).Include(u => u.Permissions).Where(s => s.visible == 1);
-            var query = qwertyContext.Select(s => new { UserId = s.OwnerId, User = s.Ownerss.own, Permission = s.PermissionsId, per = s.Permissions.permission }).Distinct().Where(s => s.UserId == Id).ToList();
-            var permission = _context.Permission.ToList();
-            if (Id == null)
+            List<UserPer> from_store = new List<UserPer>();
+            var permission = _context.Permission.Where(s => s.visible == 1).ToList();
+            using (var conn = new MySqlConnection(connString))
             {
-                return null;
-            }
-            else
-            {
-                for (int i = 0; i < permission.Count(); i++)
+                var cmd = conn.CreateCommand();
+                conn.Open();
+
+                cmd.CommandText = "s_GetUserPerbyId";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@i_userId", (int)Id);
+                cmd.Parameters.AddWithValue("@i_visible", 1);
+                var reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
                 {
-                    var check = query.Exists(e => e.Permission == permission[i].Id);
-                    if (check == true)
+                    foreach (var item in reader)
                     {
-                        List_DefaultPermisison.Add(new SelectListItem { Text = permission[i].permission, Value = permission[i].Id.ToString(), Selected = true });
+
+                        var row = new UserPer
+                        {
+                            OwnerId = reader.GetInt16("OwnerId"),
+                            Ownerss = new Owner { own = reader.GetString("own") },
+                            PermissionsId = reader.GetInt16("PermissionsId"),
+                            Permissions = new Permission { permission = reader.GetString("permission") }
+
+                        };
+                        from_store.Add(row);
+
+                    }
+
+                    if (Id == null)
+                    {
+                        return null;
                     }
                     else
                     {
-                        List_DefaultPermisison.Add(new SelectListItem { Text = permission[i].permission, Value = permission[i].Id.ToString(), Selected = false });
+                        for (int i = 0; i < permission.Count(); i++)
+                        {
+                            var check = from_store.Exists(e => e.PermissionsId == permission[i].Id);
+                            if (check == true)
+                            {
+                                List_DefaultPermisison.Add(new SelectListItem { Text = permission[i].permission, Value = permission[i].Id.ToString(), Selected = true });
+                            }
+                            else
+                            {
+                                List_DefaultPermisison.Add(new SelectListItem { Text = permission[i].permission, Value = permission[i].Id.ToString(), Selected = false });
+                            }
+                        }
+
                     }
+
                 }
+
+                return List_DefaultPermisison;
 
             }
 
-            return List_DefaultPermisison;
+
         }
 
 
