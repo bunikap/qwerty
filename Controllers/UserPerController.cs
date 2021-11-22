@@ -149,10 +149,8 @@ namespace qwerty.Controllers
                         from_store.Add(row);
 
                     }
-
-
                 }
-                return View(from_store[0]);
+                return View(from_store.FirstOrDefault());
             }
 
 
@@ -160,8 +158,9 @@ namespace qwerty.Controllers
         }
 
         // GET: UserPer/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+
             ViewData["OwnerId"] = new SelectList(_context.Owner.Where(s => s.visible == 1), "Id", "own");
             var UserModel = new UserPer();
             UserModel.AvailablePermission = GetPermission();
@@ -275,12 +274,41 @@ namespace qwerty.Controllers
         private IList<SelectListItem> GetPermission()
         {
             List<SelectListItem> List_permission = new List<SelectListItem>();
-            var AllPermission = _context.Permission.Where(s => s.visible == 1).ToList();
-            for (int i = 0; i < AllPermission.Count(); i++)
+
+            using (var conn = new MySqlConnection(connString))
             {
-                List_permission.Add(new SelectListItem { Text = AllPermission[i].permission, Value = AllPermission[i].Id.ToString() });
+                var cmd = conn.CreateCommand();
+                conn.Open();
+                cmd.CommandText = "s_GetPermission";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@i_visible", 1);
+
+
+                var reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    foreach (var item in reader)
+                    {
+
+                        var row = new Permission
+                        {
+                            permission = reader.GetString("permission"),
+                            Id = reader.GetInt16("Id")
+
+                        };
+                        List_permission.Add(new SelectListItem { Text = row.permission, Value = row.Id.ToString() });
+
+                    }
+
+
+                }
+
+
             }
+
             return List_permission;
+
+
         }
 
         private IList<SelectListItem> GetDefaultPermission(int? Id)
