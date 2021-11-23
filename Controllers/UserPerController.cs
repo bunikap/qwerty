@@ -9,8 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using qwerty.Data;
 using qwerty.Models;
 using MySql.Data.MySqlClient;
-
-using System.Configuration;
 using Microsoft.Extensions.Configuration;
 
 namespace qwerty.Controllers
@@ -41,7 +39,7 @@ namespace qwerty.Controllers
             {
                 var cmd = conn.CreateCommand();
                 await conn.OpenAsync();
-                cmd.CommandText = "s_userper";
+                cmd.CommandText = "s_GetUserper";
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@i_visible", 1);
 
@@ -160,8 +158,29 @@ namespace qwerty.Controllers
         // GET: UserPer/Create
         public async Task<IActionResult> Create()
         {
-
-            ViewData["OwnerId"] = new SelectList(_context.Owner.Where(s => s.visible == 1), "Id", "own");
+            List<Owner> owner_List = new List<Owner>();
+            using (var conn = new MySqlConnection(connString))
+            {
+                var cmd = conn.CreateCommand();
+                await conn.OpenAsync();
+                cmd.CommandText = "s_GetUser";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@i_visible", 1);
+                var reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        var row = new Owner
+                        {
+                            Id = reader.GetInt16("Id"),
+                            own = reader.GetString("own"),
+                        };
+                        owner_List.Add(row);
+                    }
+                }
+            }
+            ViewData["OwnerId"] = new SelectList(owner_List, "Id", "own");
             var UserModel = new UserPer();
             UserModel.AvailablePermission = GetPermission();
             return View(UserModel);
@@ -172,17 +191,51 @@ namespace qwerty.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UserPer userPer)
         {
+            List<Owner> owner_List = new List<Owner>();
             userPer.AvailablePermission = GetPermission();
             if (ModelState.IsValid)
             {
+
                 foreach (var item in userPer.SelectedPermission)
                 {
-                    var User = new UserPer { Id = userPer.Id, OwnerId = userPer.OwnerId, PermissionsId = Int16.Parse(item), visible = 1 };
-                    _context.Add(User);
-                    await _context.SaveChangesAsync();
+                    using (var conn = new MySqlConnection(connString))
+                    {
+                        var cmd = conn.CreateCommand();
+                        await conn.OpenAsync();
+                        cmd.CommandText = "s_CreateUserPer";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@i_Id", userPer.Id);
+                        cmd.Parameters.AddWithValue("@i_OwnerId", userPer.OwnerId);
+                        cmd.Parameters.AddWithValue("@i_perId", Int16.Parse(item));
+                        cmd.Parameters.AddWithValue("@i_visible", 1);
+                        var reader = cmd.ExecuteNonQuery();
+                        await conn.CloseAsync();
+                    }
                 }
+                using (var conn = new MySqlConnection(connString))
+                {
+                    var cmd = conn.CreateCommand();
+                    await conn.OpenAsync();
+                    cmd.CommandText = "s_GetUser";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@i_visible", 1);
+                    var reader = cmd.ExecuteReader();
+                    if (reader.HasRows == true)
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var row = new Owner
+                            {
+                                Id = reader.GetInt16("Id"),
+                                own = reader.GetString("own"),
+                            };
+                            owner_List.Add(row);
+                        }
+                    }
+                }
+
             }
-            ViewData["OwnerId"] = new SelectList(_context.Owner.Where(s => s.visible == 1), "Id", "own", userPer.OwnerId);
+            ViewData["OwnerId"] = new SelectList(owner_List, "Id", "own", userPer.OwnerId);
             return RedirectToAction(nameof(Index));
         }
         // GET: UserPer/Edit/5
