@@ -345,10 +345,35 @@ namespace qwerty.Controllers
             {
                 return NotFound();
             }
-            var userPer = await _context.UserPer
-                .Include(u => u.Ownerss)
-                .Include(u => u.Permissions).Where(s => s.visible == 1)
-                .FirstOrDefaultAsync(m => m.OwnerId == id);
+
+            List<UserPer> UserPer_store = new List<UserPer>();
+            using (var conn = new MySqlConnection(connString))
+            {
+                var cmd = conn.CreateCommand();
+                await conn.OpenAsync();
+                cmd.CommandText = "s_GetUserPerbyId";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@i_userId", id);
+                cmd.Parameters.AddWithValue("@i_visible", 1);
+                var reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    foreach (var item in reader)
+                    {
+                        var row = new UserPer
+                        {
+                            OwnerId = reader.GetInt16("OwnerId"),
+                            Ownerss = new Owner { own = reader.GetString("own") },
+                            PermissionsId = reader.GetInt16("PermissionsId"),
+                            Permissions = new Permission { permission = reader.GetString("permission") },
+                            AvailablePermission = GetDefaultPermission(id)
+
+                        };
+                        UserPer_store.Add(row);
+                    }
+                }
+            }
+            var userPer = UserPer_store.FirstOrDefault();
             userPer.AvailablePermission = GetForDelete(id);
             if (userPer == null)
             {
@@ -362,12 +387,15 @@ namespace qwerty.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int Id)
         {
-            var userPer = _context.UserPer.Where(x => x.OwnerId == Id).ToList();
-            foreach (var item in userPer)
+            using (var conn = new MySqlConnection(connString))
             {
-                item.visible = 0;
-                _context.UserPer.Update(item);
-                await _context.SaveChangesAsync();
+                var cmd = conn.CreateCommand();
+                await conn.OpenAsync();
+                cmd.CommandText = "s_EditUserPer";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@i_visible", 1);
+                cmd.Parameters.AddWithValue("@i_OwnerId", Id);
+                cmd.ExecuteNonQuery();
             }
             return RedirectToAction(nameof(Index));
         }
@@ -478,8 +506,36 @@ namespace qwerty.Controllers
         private IList<SelectListItem> GetForDelete(int? Id)
         {
             List<SelectListItem> List_ForDelete = new List<SelectListItem>();
-            var qwertyContext = _context.UserPer.Include(u => u.Ownerss).Include(u => u.Permissions).Where(s => s.visible == 1);
-            var query = qwertyContext.Select(s => new { UserId = s.OwnerId, User = s.Ownerss.own, Permission = s.PermissionsId, per = s.Permissions.permission }).Distinct().Where(s => s.UserId == Id).ToList();
+            List<UserPer> query = new List<UserPer>();
+
+            using (var conn = new MySqlConnection(connString))
+
+            {
+                var cmd = conn.CreateCommand();
+                conn.Open();
+                cmd.CommandText = "s_GetUserPerbyId";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@i_userId", Id);
+                cmd.Parameters.AddWithValue("@i_visible", 1);
+                var reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    while (reader.Read())
+                    {
+                        var row = new UserPer
+                        {
+                            OwnerId = reader.GetInt16("OwnerId"),
+                            Ownerss = new Owner { own = reader.GetString("own") },
+                            PermissionsId = reader.GetInt16("PermissionsId"),
+                            Permissions = new Permission { permission = reader.GetString("permission") },
+
+                        };
+                        query.Add(row);
+                    }
+                }
+
+            }
+
             var permissions = _context.Permission.Where(s => s.visible == 1).ToList();
             if (Id == null)
             {
@@ -489,7 +545,7 @@ namespace qwerty.Controllers
             {
                 for (int i = 0; i < permissions.Count(); i++)
                 {
-                    var check = query.Exists(e => e.Permission == permissions[i].Id);
+                    var check = query.Exists(e => e.PermissionsId == permissions[i].Id);
                     if (check == true)
                     {
                         List_ForDelete.Add(new SelectListItem { Text = permissions[i].permission, Value = permissions[i].Id.ToString(), Selected = true });
