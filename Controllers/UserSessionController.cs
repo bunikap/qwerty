@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using qwerty.Data;
@@ -38,7 +37,6 @@ namespace qwerty.Controllers
             List<Owner> from_store = new List<Owner>();
             using (var conn = new MySqlConnection(connString))
             {
-
                 var cmd = conn.CreateCommand();
                 await conn.OpenAsync();
                 cmd.CommandText = "s_FindUser";
@@ -46,13 +44,11 @@ namespace qwerty.Controllers
                 cmd.Parameters.AddWithValue("@i_visible", 1);
                 cmd.Parameters.AddWithValue("@st_own", owner.own);
                 cmd.Parameters.AddWithValue("@st_pswd", owner.pswd);
-
                 var reader = cmd.ExecuteReader();
                 if (reader.HasRows == true)
                 {
-                    foreach (var item in reader)
+                    while (await reader.ReadAsync())
                     {
-
                         var row = new Owner
                         {
                             Id = reader.GetInt16("Id"),
@@ -63,16 +59,11 @@ namespace qwerty.Controllers
                             pswd = reader.GetString("pswd")
                         };
                         from_store.Add(row);
-
                     }
-
-
                 }
 
             }
           
-            // var findUser = _context.Owner.Where(s => s.own == owner.own).Where(s =>s.visible==1).Where(s => s.pswd == owner.pswd);
-
             if (from_store.Count() > 0)
             {
                 var user = from_store.FirstOrDefault();
@@ -85,7 +76,7 @@ namespace qwerty.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
             HttpContext.Session.Clear();
             var test = HttpContext.Session.GetString("userName");
@@ -93,7 +84,6 @@ namespace qwerty.Controllers
 
 
         }
-
         [HttpGet]
         public JsonResult Check()
         {
