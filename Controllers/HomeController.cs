@@ -14,7 +14,9 @@ using NPOI.XSSF.UserModel;
 using NPOI.HSSF.UserModel;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-
+using MySql.Data.MySqlClient;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace qwerty.Controllers
 {
@@ -22,21 +24,45 @@ namespace qwerty.Controllers
     {
         // GET: Home
         private readonly IWebHostEnvironment _webHostEnvironment;
-
-
         private readonly QwertyContext _context;
+        public IConfiguration Configuration { get; }
+        public string connString;
 
-        public HomeController(QwertyContext context, IWebHostEnvironment webHostEnvironment)
+
+
+        public HomeController(QwertyContext context, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            Configuration = configuration;
+            connString = Configuration.GetConnectionString("Default");
+
         }
         public ActionResult Index()
         {
-         
-            ViewData["OwnerId"] = new SelectList(_context.Owner.Where(s => s.visible == 1), "Id", "own");
-
-
+            List<Owner> owner_list = new List<Owner>();
+            using (var conn = new MySqlConnection(connString))
+            {
+                var cmd = conn.CreateCommand();
+                conn.Open();
+                cmd.CommandText = "s_GetUser";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@i_visible", 1);
+                var reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    foreach (var item in reader)
+                    {
+                        var row = new Owner
+                        {
+                            Id = reader.GetInt16("Id"),
+                            own = reader.GetString("own")
+                        };
+                        owner_list.Add(row);
+                    }
+                }
+            }
+            ViewData["OwnerId"] = new SelectList(owner_list, "Id", "own");
             return View();
         }
         [HttpPost]
@@ -55,7 +81,6 @@ namespace qwerty.Controllers
             {
                 sum += item.Task;
             }
-
             foreach (var item in query)
             {
                 if (sum == 0)
@@ -76,41 +101,48 @@ namespace qwerty.Controllers
                 series = value,
             };
             // ViewBag.Data = Data_points;
-
-
-
             return Json(Data_points);
 
         }
         [HttpPost]
         public JsonResult DataTable(int OwnerId)
         {
-            List<HomeModel> n = new List<HomeModel>();
-
-            var table_data = _context.Tasks.Where(s => s.OwnersId == OwnerId).OrderBy(s => s.Id).Select(s => new { Title = s.Title, Detail = s.Detail, SDate = s.SDate.ToString("dd/MM/yyyy"), DDate = s.DDate.ToString("dd/MM/yyyy"), ApproveId = s.ApproveId, StatusId = s.StatusId }).Distinct().ToList();
-            var c = from x in table_data
-                    join j in _context.Status on x.StatusId equals j.Id
-                    select (new { Title = x.Title, Detail = x.Detail, SDate = x.SDate.ToString(), DDate = x.DDate.ToString(), ApproveId = x.ApproveId, Status = j.status });
-            var v = from C in c
-                    join J in _context.Owner on C.ApproveId equals J.Id
-                    select (new HomeModel { title = C.Title.ToString(), detail = C.Detail.ToString(), start = C.SDate.ToString(), deadline = C.DDate.ToString(), approver = J.own.ToString(), status = C.Status.ToString() });
-
-            if (v.Count() == 0)
+            List<HomeModel> from_store = new List<HomeModel>();
+            using (var conn = new MySqlConnection(connString))
             {
-                n.Add(new HomeModel { title = "", detail = "", start = "", deadline = "", approver = "", status = "" });
-            }
-            else
-            {
-                foreach (var item in v)
+                var cmd = conn.CreateCommand();
+                conn.Open();
+                cmd.CommandText = "s_GetHomeModel";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@i_OwnerId", OwnerId);
+                cmd.Parameters.AddWithValue("@i_visible", 1);
+                var reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
                 {
-                    n.Add(item);
+                    foreach (var item in reader)
+                    {
+                        var row = new HomeModel
+                        {
+                            title = reader.GetString("Title"),
+                            detail = reader.GetString("Detail"),
+                            start = reader.GetDateTime("SDate").ToShortDateString(),
+                            deadline = reader.GetDateTime("DDate").ToShortDateString(),
+                            approver = reader.GetString("own"),
+                            status = reader.GetString("status"),
+                        };
+                        from_store.Add(row);
+                    }
                 }
+
             }
-            var table = new { task = n };
+            if (from_store.Count() == 0)
+            {
+                from_store.Add(new HomeModel { title = "", detail = "", start = "", deadline = "", approver = "", status = "" });
+            }
+            var table = new { task = from_store };
             return Json(table);
         }
         public async Task<IActionResult> Import()
-
         {
             IFormFile file = Request.Form.Files[0];
             string folderName = "UploadExcel";
@@ -200,7 +232,7 @@ namespace qwerty.Controllers
 
         }
 
-       
+
     }
 
 
