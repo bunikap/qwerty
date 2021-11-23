@@ -204,7 +204,6 @@ namespace qwerty.Controllers
                         await conn.OpenAsync();
                         cmd.CommandText = "s_CreateUserPer";
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@i_Id", userPer.Id);
                         cmd.Parameters.AddWithValue("@i_OwnerId", userPer.OwnerId);
                         cmd.Parameters.AddWithValue("@i_perId", Int16.Parse(item));
                         cmd.Parameters.AddWithValue("@i_visible", 1);
@@ -245,16 +244,39 @@ namespace qwerty.Controllers
             {
                 return NotFound();
             }
-            var userPer = await _context.UserPer
-                .Include(u => u.Ownerss)
-                .Include(u => u.Permissions).Where(s => s.visible == 1)
-                .FirstOrDefaultAsync(m => m.OwnerId == id);
 
-            userPer.AvailablePermission = GetDefaultPermission(id);
+            List<UserPer> from_store = new List<UserPer>();
+
+            using (var conn = new MySqlConnection(connString))
+            {
+                var cmd = conn.CreateCommand();
+                await conn.OpenAsync();
+                cmd.CommandText = "s_GetUserPerbyId";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@i_userId", id);
+                cmd.Parameters.AddWithValue("@i_visible", 1);
+                var reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    foreach (var item in reader)
+                    {
+                        var row = new UserPer
+                        {
+                            OwnerId = reader.GetInt16("OwnerId"),
+                            Ownerss = new Owner { own = reader.GetString("own") },
+                            PermissionsId = reader.GetInt16("PermissionsId"),
+                            Permissions = new Permission { permission = reader.GetString("permission") },
+                        };
+                        from_store.Add(row);
+                    }
+                }
+            }
+            var userPer = from_store.FirstOrDefault();
             if (userPer == null)
             {
                 return NotFound();
             }
+            userPer.AvailablePermission = GetDefaultPermission(id);
             ViewData["PermissionsId"] = new SelectList(_context.Permission.Where(s => s.visible == 1), "Id", "permission", userPer.PermissionsId);
             return View(userPer);
         }
@@ -269,25 +291,51 @@ namespace qwerty.Controllers
             {
                 return NotFound();
             }
+            List<Owner> owner_List = new List<Owner>();
             userPer.AvailablePermission = GetDefaultPermission(id);
             var Selected = userPer.SelectedPermission;
-            var User_delete = _context.UserPer.Where(x => x.OwnerId == id).Where(s => s.visible == 1).ToList();
-            foreach (var item in User_delete)
+            using (var conn = new MySqlConnection(connString))
             {
-                item.visible = 0;
-                _context.UserPer.Update(item);
-                await _context.SaveChangesAsync();
+                var cmd = conn.CreateCommand();
+                await conn.OpenAsync();
+                cmd.CommandText = "s_EditUserPer";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@i_OwnerId", id);
+                cmd.Parameters.AddWithValue("@i_visible", 1);
+                var reader = cmd.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        var row = new Owner
+                        {
+                            Id = reader.GetInt16("Id"),
+                            own = reader.GetString("own"),
+                        };
+                        owner_List.Add(row);
+                    }
+                }
+                await conn.CloseAsync();
             }
             if (ModelState.IsValid)
             {
-                foreach (var item in Selected)
+                using (var conn = new MySqlConnection(connString))
                 {
-                    var User = new UserPer { OwnerId = (int)id, PermissionsId = Int16.Parse(item), visible = 1 };
-                    _context.Add(User);
-                    await _context.SaveChangesAsync();
+                    foreach (var item in Selected)
+                    {
+                        var cmd = conn.CreateCommand();
+                        await conn.OpenAsync();
+                        cmd.CommandText = "s_CreateUserPer";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@i_OwnerId", id);
+                        cmd.Parameters.AddWithValue("@i_perId", Int16.Parse(item));
+                        cmd.Parameters.AddWithValue("@i_visible", 1);
+                        var reader = cmd.ExecuteNonQuery();
+                        await conn.CloseAsync();
+                    }
                 }
             }
-            ViewBag.OwnerId = new SelectList(_context.Owner, "Id", "own", userPer.OwnerId);
+            ViewBag.OwnerId = new SelectList(owner_List, "Id", "own", userPer.OwnerId);
             return RedirectToAction(nameof(Index));
         }
         // GET: UserPer/Delete/5
