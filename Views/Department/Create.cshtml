@@ -37,16 +37,16 @@
                     <div class="card-header">
                         <h3 class="card-title">Add Department</h3>
                     </div>
-                    <form asp-action="Create" id="quickForm">
+                    <form asp-action="Create" id="quickForm" method="post">
                         <div class="card-body">
-
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                    <div class="form-group">
-                                        <label asp-for="department" class="control-label"></label>
-                                        <input asp-for="department" type="text" name="dep" class="form-control" />
 
+                                    <div class="form-group">
+
+                                        <label asp-for="department" class="control-label"></label>
+                                        <input asp-for="department" type="text" name="department" class="form-control" />
                                     </div>
 
                                 </div>
@@ -78,26 +78,19 @@
 
 
 </section>
-<script>
-    $(function () {
-        $.validator.setDefaults({
-            submitHandler: function () {
-                alert("Form successful submitted!");
-            }
-        });
-        $('#quickForm').validate({
+<script> 
+     $(function () {
+
+         $('#quickForm').validate({
             rules: {
-                dep: {
+                department: {
                     required: true,
                 },
-
             },
             messages: {
-                dep: {
+                department: {
                     required: "Please enter Department",
-
                 },
-
             },
             errorElement: 'span',
             errorPlacement: function (error, element) {
@@ -110,7 +103,7 @@
             unhighlight: function (element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
             }
-        });
+        }); 
     });
 </script>
 
