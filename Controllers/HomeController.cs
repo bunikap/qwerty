@@ -206,7 +206,17 @@ namespace qwerty.Controllers
 
                     foreach (var i in cells)
                     {
-                        var a = new Tasks { Title = i[0], Detail = i[1], SDate = Convert.ToDateTime(i[2]), DDate = Convert.ToDateTime(i[3]), OwnersId = int.Parse(i[4]), ApproveId = int.Parse(i[5]), StatusId = int.Parse(i[6]) };
+                        var a = new Tasks
+                        {
+                            Title = i[0],
+                            Detail = i[1],
+                            SDate = Convert.ToDateTime(i[2]),
+                            DDate = Convert.ToDateTime(i[3]),
+                            OwnersId = int.Parse(i[4]),
+                            ApproveId = int.Parse(i[5]),
+                            StatusId = int.Parse(i[6]),
+                            visible = 1
+                        };
                         _context.Add(a);
                         await _context.SaveChangesAsync();
                     }
