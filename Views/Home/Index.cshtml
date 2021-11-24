@@ -18,6 +18,7 @@
     <script src="~/plugins/chart.js/Chart.min.js"></script>
     <script src="~/plugins/select2/js/select2.full.min.js"></script>
     <script src="~/plugins/select2/js/select2.min.js"></script>
+    <script src="~/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 
 
 
@@ -65,9 +66,15 @@
 
         $('#btnupload').on('click', function () {
 
+
             var fileExtension = ['xls', 'xlsx'];
 
             var filename = $('#fileupload').val();
+            let fn = filename.split('\\')
+
+              $("#btnAddProfile").html(fn.slice(-1));
+
+        
 
             if (filename.length == 0) {
 
@@ -80,6 +87,7 @@
             else {
 
                 var extension = filename.replace(/^.*\./, '');
+                console.log(extension);
 
                 if ($.inArray(extension, fileExtension) == -1) {
 
@@ -94,9 +102,10 @@
             var fileUpload = $("#fileupload").get(0);
 
             var files = fileUpload.files;
+              
 
             fdata.append(files[0].name, files[0]);
-
+            console.log(fdata)
             $.ajax({
 
                 type: "POST",
@@ -184,9 +193,10 @@
                 </div>
                 <div class="col-md-3">
                     <input type="file" class="custom-file-input" name="files" id="fileupload">
-                    <label class="custom-file-label" for="customFile">Choose file</label>
+                    <label class="custom-file-label" for="customFile" id= "btnAddProfile">Choose file</label>
 
                 </div>
+
                 <div class="col-md-4">
                     <input type="button" name="Upload" value="Upload" id="btnupload" class="btn btn-dark"
                         style="background: #97C1A9;" />
@@ -250,7 +260,6 @@
 
     </div>
 </section>
-
 
 
 
