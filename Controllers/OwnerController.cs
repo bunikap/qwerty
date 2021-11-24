@@ -22,13 +22,13 @@ namespace qwerty.Controllers
         public async Task<IActionResult> Index()
 
         {
-     
-     
-                var qwertyContext = _context.Owner.Include(o => o.Permissionn).Include(o => o.departmentt).Where(s => s.visible == 1);
 
-                return View(await qwertyContext.ToListAsync());
 
-            
+            var qwertyContext = _context.Owner.Include(o => o.Permissionn).Include(o => o.departmentt).Where(s => s.visible == 1);
+
+            return View(await qwertyContext.ToListAsync());
+
+
         }
 
         // GET: Owner/Details/5
@@ -104,34 +104,38 @@ namespace qwerty.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Edit(int id, [Bind("Id,own,DepartmentId,PermissionId,pswd")] Owner owner)
         {
-            if (id != owner.Id)
+            if (owner.Id == 0)
             {
                 return NotFound();
             }
+            var owner_old = await _context.Owner.FindAsync(id);
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    owner.visible = 1;
-                    _context.Update(owner);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OwnerExists(owner.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                owner_old.PermissionId = owner.PermissionId;
+                owner_old.DepartmentId = owner.DepartmentId;
+                owner_old.own = owner.own;
+                owner_old.visible = 1;
+                _context.Update(owner_old);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!OwnerExists(owner.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+
             ViewData["PermissionId"] = new SelectList(_context.Permission.Where(s => s.visible == 1), "Id", "permission", owner.PermissionId);
             ViewData["DepartmentId"] = new SelectList(_context.Department.Where(s => s.visible == 1), "Id", "department", owner.DepartmentId);
 
