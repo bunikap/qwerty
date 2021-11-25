@@ -38,17 +38,17 @@ namespace qwerty.Controllers
                 cmd.CommandText = "s_GetDepartment";
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@i_visible", 1);
-
                 var reader = cmd.ExecuteReader();
                 if (reader.HasRows == true)
                 {
-                    while (await reader.ReadAsync())
+                    foreach(var item in reader)
                     {
 
                         var row = new Department
                         {
                             Id = reader.GetInt16("Id"),
-                            department = reader.GetString("department")
+                            department = reader.GetString("department"),
+                      
 
                         };
                         Department_store.Add(row);
