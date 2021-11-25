@@ -72,7 +72,7 @@ namespace qwerty.Controllers
             List<string> label = new List<string>();
             List<double> value = new List<double>();
             var status_list = _context.Status.ToList();
-            var OwnerTask_List = _context.Tasks.Where(s => s.OwnersId == OwnerId).ToList();
+            var OwnerTask_List = _context.Tasks.Where(s => s.OwnersId == OwnerId).Where(s=>s.visible==1).ToList();
             var query = from status in status_list
                         join own_task in OwnerTask_List on status.Id equals own_task.StatusId into gj
                         select new { status = status.status, Task = gj.Count() };
